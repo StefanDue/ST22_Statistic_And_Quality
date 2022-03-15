@@ -6,18 +6,17 @@ output:
     df_print: paged
 ---
 # A) TECHNISCHE FERTIGKEITEN\
-### A-1) 
-**Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?**\
-**a) Studierende an einer Hochschule.**\
-     Bestandsgröße\
-**b) Hochzeiten am Standesamt einer Gemeinde.**\
-     Bewegungsgröße\
-**c) Bei der Behörde gemeldete Personenkraftwagen.**\
-     Bestandsgröße\
-**d) Maschinenausfälle in einer Werkstatt.**\
-     Bewegungsgröße\
-**e) Wartende Kunden vor einem Abfertigungsschalter.**\
-     Bestandsgröße\
+### A-1) Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?
+* **Studierende an einer Hochschule.**
+  * Bestandsgröße
+* **Hochzeiten am Standesamt einer Gemeinde.**
+  * Bewegungsgröße
+* **Bei der Behörde gemeldete Personenkraftwagen.**
+  * Bestandsgröße
+* **Maschinenausfälle in einer Werkstatt.**
+  * Bewegungsgröße
+* **Wartende Kunden vor einem Abfertigungsschalter.**
+  * Bestandsgröße
 
 
 ### A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
@@ -25,21 +24,74 @@ output:
 Liste <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
 ```
 
-**a) Was stellt bei dieser Fragestellung die statistische Grundgesamtheit dar? Was sind die beobachteten Merkmale der statistischen Einheiten und wie sind sie skaliert?**\
-**b) Ermittle die absolute und relative Häufigkeitstabelle der eingehenden Anrufe und stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**\
-**Stabdiagramm der absoluten Häufigkeiten**\
+##### **a) Was stellt bei dieser Fragestellung die statistische Grundgesamtheit dar? Was sind die beobachteten Merkmale der statistischen Einheiten und wie sind sie skaliert?**
+* Grundgesamtheit
+  * Die Grundgesamtheit setzt sich auch sen statistischen Einheiten zusammen. Die Grundgesamtheit sind die Anzahl der Anrufe über alle Intervalle, hier sind es `r sum(Liste)` Elemente.
+* Merkmale
+  * Anzahl der 10-Minuten-Zeitintervalle (`r length(Liste)`)
+  * Anzahl der Anrufe über alle Zeitintervalle (`r sum(Liste)`)
+* Skalierung
+  * Metrische Skalierung (Kardinalskala), die Verhältnisskaliert ist
+  
+##### **b) Ermittle die absolute und relative Häufigkeitstabelle der eingehenden Anrufe und stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
+
+##### **Stabdiagramm der absoluten Häufigkeiten**
 ```{r}
-barplot(table(Liste), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls", ylab = "Absolute Häufigkeit")
+barplot(table(Liste), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit")
 ```
-**Stabdiagramm der relativen Häufigkeiten**\
+
+##### **Stabdiagramm der relativen Häufigkeiten**
+
 ```{r}
-barplot(table(Liste)/sum(Liste), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls")
+barplot(table(Liste)/sum(Liste), ylim = c(0,0.25), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls")
 ```
-**Summenhäufigkeit**\
+
+##### **Summenhäufigkeit**
+
 ```{r}
 plot(cumsum(table(Liste)), xlim = c(0,6), ylim = c(0,40), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Summenhäufigkeit")
 ```
 
-**c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**\
-**d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße)**\
-**e) Stelle die Daten in einem Boxplot dar**\
+##### **c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+
+
+##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße)**
+
+##### **e) Stelle die Daten in einem Boxplot dar**
+
+
+### A-3) Eine Anzahl von 1000 Kleinmotoren weist folgende Lebensdauer auf:
+```{r}
+AnzahlMotoren <- c(33,276,404,237,50)
+Lebensdauer <- c(0:10)
+```
+
+##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
+
+##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+
+##### **c) Bestimme der Anteil der Motoren mit über 6 Jahren Lebensdauer.**
+
+##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße).**
+
+### A-4) Ein technisches Servicecenter zeichnet an 100 Tagen die Häufigkeit der Einsätze auf. Es ergibt sich folgende Tabelle:
+```{r}
+AnzahlTage <- c(16,48,27,9)
+AnzahlEinsaetze <- c(0:80)
+```
+
+##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.** 
+
+##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+
+##### **c) Bestimme der Anteil der Tage mit über 20 Einsätzen.**
+
+##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Welcher Aspekt könnte hier problematisch sein? Warum?**
+
+
+
+# B) VERSTÄNDNISFRAGEN
+
+### B-1) Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
+
+### B-2) Verschiebungssatz zur Berechnung der Standardabweichung:\ Das arithmetische Mittel ist gegeben durch $\mu\ =\ $ und die Varianz ist definiert als $\sigm^2$.\ Zeige die direkte Umformung, dass daraus folgt (Verschiebungssatz):\ $$\sigm^2\ =\ $$
