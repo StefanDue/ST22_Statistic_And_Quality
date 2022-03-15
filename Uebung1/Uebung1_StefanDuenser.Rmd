@@ -1,0 +1,45 @@
+---
+title: "Statistik und Qualität - Ausarbeitung der ersten Übung"
+author: "Stefan Dünser"
+output:
+  html_document:
+    df_print: paged
+---
+# A) TECHNISCHE FERTIGKEITEN\
+### A-1) 
+**Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?**\
+**a) Studierende an einer Hochschule.**\
+     Bestandsgröße\
+**b) Hochzeiten am Standesamt einer Gemeinde.**\
+     Bewegungsgröße\
+**c) Bei der Behörde gemeldete Personenkraftwagen.**\
+     Bestandsgröße\
+**d) Maschinenausfälle in einer Werkstatt.**\
+     Bewegungsgröße\
+**e) Wartende Kunden vor einem Abfertigungsschalter.**\
+     Bestandsgröße\
+
+
+### A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
+```{r}
+Liste <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
+```
+
+**a) Was stellt bei dieser Fragestellung die statistische Grundgesamtheit dar? Was sind die beobachteten Merkmale der statistischen Einheiten und wie sind sie skaliert?**\
+**b) Ermittle die absolute und relative Häufigkeitstabelle der eingehenden Anrufe und stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**\
+**Stabdiagramm der absoluten Häufigkeiten**\
+```{r}
+barplot(table(Liste), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls", ylab = "Absolute Häufigkeit")
+```
+**Stabdiagramm der relativen Häufigkeiten**\
+```{r}
+barplot(table(Liste)/sum(Liste), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls")
+```
+**Summenhäufigkeit**\
+```{r}
+plot(cumsum(table(Liste)), xlim = c(0,6), ylim = c(0,40), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Summenhäufigkeit")
+```
+
+**c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**\
+**d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße)**\
+**e) Stelle die Daten in einem Boxplot dar**\

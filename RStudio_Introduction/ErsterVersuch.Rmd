@@ -1,0 +1,28 @@
+---
+title: "Erster Versuch"
+output: pdf_document
+---
+
+In diesem Beispiel versuchen wir ...
+
+```{r}
+X.df <- data.frame(Name=c("Anna", "Fritz", "Lilian", "Werner"), Alter=c(24,47,38,76))
+X.df
+```
+
+Die erste Frage ist, welches das höchste Alter ist ...
+
+```{r}
+MaxAge <- max(X.df$Alter)
+```
+
+Die älteste Person ist `r MaxAge` Jahre alt. Das Durchschnittsalter beträgt ...
+
+```{r}
+mean(X.df$Alter)
+```
+
+```{r}
+barplot(X.df$Alter)
+```
+
