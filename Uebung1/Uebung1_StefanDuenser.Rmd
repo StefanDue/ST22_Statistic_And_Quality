@@ -4,94 +4,431 @@ author: "Stefan Dünser"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 # A) TECHNISCHE FERTIGKEITEN\
 ### A-1) Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?
-* **Studierende an einer Hochschule.**
+* **a) Studierende an einer Hochschule.**
   * Bestandsgröße
-* **Hochzeiten am Standesamt einer Gemeinde.**
+* **b) Hochzeiten am Standesamt einer Gemeinde.**
   * Bewegungsgröße
-* **Bei der Behörde gemeldete Personenkraftwagen.**
+* **c) Bei der Behörde gemeldete Personenkraftwagen.**
   * Bestandsgröße
-* **Maschinenausfälle in einer Werkstatt.**
+* **d) Maschinenausfälle in einer Werkstatt.**
   * Bewegungsgröße
-* **Wartende Kunden vor einem Abfertigungsschalter.**
+* **e) Wartende Kunden vor einem Abfertigungsschalter.**
   * Bestandsgröße
-
-
+  
 ### A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
 ```{r}
-Liste <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
+Liste.vec <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
+Liste.vec
 ```
 
 ##### **a) Was stellt bei dieser Fragestellung die statistische Grundgesamtheit dar? Was sind die beobachteten Merkmale der statistischen Einheiten und wie sind sie skaliert?**
 * Grundgesamtheit
-  * Die Grundgesamtheit setzt sich auch sen statistischen Einheiten zusammen. Die Grundgesamtheit sind die Anzahl der Anrufe über alle Intervalle, hier sind es `r sum(Liste)` Elemente.
+  * Die Grundgesamtheit setzt sich auch sen statistischen Einheiten zusammen. Die Grundgesamtheit sind die Anzahl der 10-Minuten-Zeitintervalle - (`r length(Liste.vec)`).
 * Merkmale
-  * Anzahl der 10-Minuten-Zeitintervalle (`r length(Liste)`)
-  * Anzahl der Anrufe über alle Zeitintervalle (`r sum(Liste)`)
+  * Anzahl der 10-Minuten-Zeitintervalle (`r length(Liste.vec)`)
+  * Anzahl der Anrufe über alle Zeitintervalle (`r sum(Liste.vec)`)
 * Skalierung
-  * Metrische Skalierung (Kardinalskala), die Verhältnisskaliert ist
-  
+  * Metrische Skalierung (Kardinalskala), die verhältnisskaliert ist
+
 ##### **b) Ermittle die absolute und relative Häufigkeitstabelle der eingehenden Anrufe und stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
 
-##### **Stabdiagramm der absoluten Häufigkeiten**
+##### **Absolute Häufigkeit:**
 ```{r}
-barplot(table(Liste), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit")
+table(Liste.vec)
 ```
 
-##### **Stabdiagramm der relativen Häufigkeiten**
-
 ```{r}
-barplot(table(Liste)/sum(Liste), ylim = c(0,0.25), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls")
+barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col.main = "darkblue", col = "blue")
 ```
 
+##### **Relative Häufigkeit:**
+```{r}
+table(Liste.vec)/length(Liste.vec)
+```
+
+```{r}
+barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6)))/sum(table(Liste.vec)), ylim = c(0,0.4), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls",ylab = "relative Häufigkeit", main = "Relative Häufigkeitsverteilung", col.main = "darkblue", col = "blue")
+```
 ##### **Summenhäufigkeit**
-
 ```{r}
-plot(cumsum(table(Liste)), xlim = c(0,6), ylim = c(0,40), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Summenhäufigkeit")
+cumsum(table(Liste.vec))
+```
+```{r}
+barplot(cumsum(table(factor(Liste.vec,levels = c(0,1,2,3,4,5,6))))/sum(table(Liste.vec)), ylim = c(0,1.2), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Relative Summenhäufigkeit", main = "Summenhäufigkeit", col.main = "darkblue", col = "blue")
+abline(0.25, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.75, 0, lty = "dashed")
 ```
 
 ##### **c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
-
+__*Arithmetisches Mittel:*__ Das arithmestische Mittel kann als Schwerpunkt der Häufigkeitsverteilung angesehen werden. In diesem Fall beträgt das arithmetische Mittel nach Abschätzung rund 1,5, da somit links und rechts der x-Achse in etwa gleich viele Werte sind. 
+__*Median:*__ Der Median wird über die y-Achse ermittelt. Der Median befindet sich dann auf der x-Achse an dem Punkt, an dem 50% des y-Werts erreicht sind. In diesem Fall ist der Median bei 1.
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße)**
+__*Zentralmaße:**__\
+*__**Modus**__*
+```{r}
+getmode <- function(Liste.vec) {
+   uniqv <- unique(Liste.vec)
+   uniqv[which.max(tabulate(match(Liste.vec, uniqv)))]
+}
+mode <- getmode(Liste.vec)
+mode
+```
 
+**Median**
+```{r}
+median(Liste.vec)
+```
+**Arithmetisches Mittel**
+```{r}
+mean(Liste.vec)
+```
+\
+__*Streumaße:*__
+Minimum
+```{r}
+Minimum <- min(Liste.vec)
+Minimum
+
+```
+**Maximum**
+```{r}
+Maximum <- max(Liste.vec)
+Maximum
+```
+**Spannweite**
+```{r}
+Spannweite <- range(Liste.vec)
+Spannweite
+```
+**Quantile**
+```{r}
+quantile(Liste.vec)
+```
+**Mittlere absolute Abweichung**
+```{r}
+mean(abs(Liste.vec-mean(Liste.vec)))
+```
+**Standardabweichung**
+```{r}
+sd(Liste.vec)
+```
 ##### **e) Stelle die Daten in einem Boxplot dar**
-
+```{r}
+boxplot(Liste.vec, col = "blue")
+```
+\
+Besonders Auffällig ist bei diesem Boxplot bzw. den Werten aus der Liste, dass der Median und das erste Quartil (25% Quantil) zusammenfallen. Die Werte 4 Anrufe sowie 6 Anrufe innerhalb eines 10-Minuten_Zeitintervalls werden hier als Ausreißer aufgefasst und als Kreis dargestellt. 
 
 ### A-3) Eine Anzahl von 1000 Kleinmotoren weist folgende Lebensdauer auf:
 ```{r}
-AnzahlMotoren <- c(33,276,404,237,50)
-Lebensdauer <- c(0:10)
+Klassen.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]")
+Anzahl.vec <- c(33,276,404,237,50)
+
+Klassen.vec; Anzahl.vec
+```
+```{r}
+Lebensdauer.df <- data.frame(Lebensdauer=Klassen.vec, Anzahl_Motoren=Anzahl.vec)
+
+Lebensdauer.df
+```
+\
+Ergänzung der vorgegebenen Liste um die Klassenbreite und die Klassenmitte
+```{r}
+Lebensdauer.df <- data.frame(Lebensdauer=Lebensdauer.df$Lebensdauer, Klassenmitte=c(1,3,5,7,9), Klassenbreite=rep(2,5), Anzahl_Motoren=Lebensdauer.df$Anzahl_Motoren)
+
+Lebensdauer.df
+```
+\
+Ergänzung der Tabelle um die relative Häufigkeitsverteilung und die Summenhäufigkeit
+```{r}
+RelHfgk.vec <- Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren)
+
+SumHfgk.vec <- cumsum(RelHfgk.vec)
+
+Lebensdauer.df <- data.frame(Lebensdauer.df, RelHfgk.vec, SumHfgk.vec)
+
+Lebensdauer.df
+```
+
+Ergänzung der Tabelle um die Häufigkeitsdichte
+```{r}
+HfgkDichte.vec <- Lebensdauer.df$RelHfgk.vec / Lebensdauer.df$Klassenbreite
+  
+Lebensdauer.df <- data.frame(Lebensdauer.df, Dichte=HfgkDichte.vec)
+
+Lebensdauer.df
 ```
 
 ##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
+**Absolute Häufigkeitsverteilung**
+```{r}
+barplot(Lebensdauer.df$Anzahl_Motoren, names=Lebensdauer.df$Lebensdauer, col = "blue", xlab = "Lebensdauer in Jahre", ylab = "Anzahl der Motoren", main = "Absolute Häufigkeitsverteilung", ylim = c(0,500))
+```
+**Relative Häufigkeitsverteilung**
+```{r}
+barplot(Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren), ylim = c(0,0.6), xlab = "Lebensdauer in Jahre", ylab = "rel. Häufigkeit", col = "blue", main = "Relative Häufigkeitsverteilung")
+```
+\
+**Summenhäufigkeit**
+```{r}
+X.vec <- c(0,2,4,6,8,10)
+Y.vec <- c(0, Lebensdauer.df$SumHfgk.vec)
+plot(X.vec, Y.vec, type = "l", lty = 1, main = "Summenhäufigkeit", xlab = "max. Lebensdauer in Jahre", ylab = "rel. Häufigkeit")
+points(X.vec, Y.vec)
+lines(X.vec, Y.vec, type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.75, 0, lty = "dashed")
+```
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 
-##### **c) Bestimme der Anteil der Motoren mit über 6 Jahren Lebensdauer.**
+__*Arithmetisches Mittel - geschätzt:*__ Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.\
+__*Median:*__ Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgelesen werden. Der Median beträgt schätzungsweise bei 4.
 
+
+##### **c) Bestimme der Anteil der Motoren mit über 6 Jahren Lebensdauer.**
+```{r}
+LangeLebensdauer.vec <- Lebensdauer.df$Anzahl_Motoren[4] + Lebensdauer.df$Anzahl_Motoren[5]
+
+LangeLebensdauer.vec
+```
+Motoren mit Lebensdauern über 6 Jahren befinden sich in der Liste in den letzten beiden statistischen Einheiten. Über die [] kann auf spezielle Vektorelemente/Listenelemente zugegriffen werden. In diesem Fall wird auf die Listenelemente 4 und 5 zugegriffen und für die Anzahl der Motoren, die länger als 6 Jahre laufen, addiert. Somit laufen `r LangeLebensdauer.vec` Motoren länger als 6 Jahre.
+
+**Lebensdauer von Motoren**
+```{r}
+barplot(Lebensdauer.df$Dichte, names=Lebensdauer.df$Lebensdauer, main = "Lebensdauer von Motoren", xlab = "Lebensdauer in Jahre", ylab = "Häufigkeitsdichte", ylim = c(0,0.3), space = 0, col = "blue")
+```
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße).**
+```{r}
+Lebensdauer.vec <- c(rep(1,33), rep(3,276), rep(5,404), rep(7,237), rep(9,50))
+```
+
+__*Zentralmaße*__
+**Modus**
+```{r}
+getmode <- function(Lebensdauer.vec) {
+   uniqv <- unique(Lebensdauer.vec)
+   uniqv[which.max(tabulate(match(Lebensdauer.vec, uniqv)))]
+}
+getmode(Lebensdauer.vec)
+```
+\
+**Median**
+```{r}
+median(Lebensdauer.vec)
+```
+\
+**Mittelwert**
+```{r}
+Mittelwert <- sum(Lebensdauer.df$RelHfgk.vec * Lebensdauer.df$Klassenmitte)
+
+Mittelwert
+```
+\
+__*Streumaße*__\
+**Minimum**
+```{r}
+min(Lebensdauer.vec)
+```
+\
+**Maximum**
+```{r}
+max(Lebensdauer.vec)
+```
+\
+**Spannweite**
+```{r}
+range(Lebensdauer.vec)
+```
+\
+**Quantile**
+```{r}
+quantile(Lebensdauer.vec)
+```
+\
+**Standardabweichung**
+```{r}
+sd(Lebensdauer.vec)
+```
+\
+**Mittlere absolute Abweichung**
+```{r}
+mean(abs(Lebensdauer.vec-mean(Lebensdauer.vec)))
+```
+In diesem Beispiel ist der Modus 5. Da es 5 Jahre Lebensdauer nicht gibt, ist die richtige Antwort, dass der Modus das einseitig offene Intervall (4,6] ist. 
+
 
 ### A-4) Ein technisches Servicecenter zeichnet an 100 Tagen die Häufigkeit der Einsätze auf. Es ergibt sich folgende Tabelle:
 ```{r}
-AnzahlTage <- c(16,48,27,9)
-AnzahlEinsaetze <- c(0:80)
+AnzahlTage.vec <- c(16,48,27,9)
+AnzahlEinsätze.vec <- c("[0,10]", "(10,20]", "(20,30]", "(30,80]")
+Service.df <- data.frame(Einsätze = AnzahlEinsätze.vec, Tage = AnzahlTage.vec)
+
+Service.df
+```
+```{r}
+RelHfk.vec <- Service.df$Tage / sum(Service.df$Tage)
+SumHfk.vec <- cumsum(RelHfk.vec)
+
+Service.df <- data.frame(Service.df, relHfk = RelHfk.vec, sumHfk = SumHfk.vec)
+
+Service.df
+```
+```{r}
+Service.df <- data.frame(Service.df, Klassenbreite=c(10,10,10,50), Klassenmitte=c(5,15,25,55))
+Service.df
+```
+
+```{r}
+HfkDichte.vec <- Service.df$relHfk / Service.df$Klassenbreite
+
+Service.df <- data.frame(Service.df, Dichte=HfkDichte.vec)
+
+Service.df
 ```
 
 ##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.** 
+**Häufigkeitsverteilung**
+```{r}
+barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
+```
+\
+Die oben dargestellte Häufigkeitsverteilung bildet die statistischen Einheiten in einheitlichen Klassenbreiten ab. Die Darstellung lässt den Trugschluss zu, dass die letzte statistische Einheit die gleiche Breite wie die anderen Klassen aufweist. Im gegensatz zu den anderen Einheiten ist die letzte statistische Einheit nicht 10 sondern 50 Einsätzte pro Tag breit. In der nachfolgenden Darstellung werden die Intervalle ignoriert und die absolute Anzahl der Einsätze pro Tag angezeigt. Diese Darstellung kann einfacher verständlich und besser anschaulich zeigen, mit welcher Häufigkeit Anrufe pro Tag auftreten.
+```{r}
+Service.vec <- c(rep(5,16), rep(15,48), rep(25,27), rep(55,9))
+X2a4.vec <- c(0,10,20,30,80)
+hist(Service.vec, X2a4.vec, main = "Häufigkeitsverteilung (andere Darstellung)", xlab = "Anzahl Einsätze pro Tag", ylab = "Häufigkeitsdichte", col = "blue")
+barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
+```
+
+**Summenhäufigkeit**
+```{r}
+Xa4.vec <- c(0,10,20,30,80)
+Ya4.vec <- c(0, Service.df$sumHfk)
+plot(Xa4.vec, Ya4.vec, main = "Summenhäufigkeit", xlab = "Anzahl Anrufe pro Tag", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+points(Xa4.vec, Ya4.vec)
+lines(Xa4.vec, Ya4.vec, type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+```
+
+
+##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+__*Arithmetisches Mittel:*__ Das aritmethische Mittel wird auf 19 geschätzt. Links und rechts auf der x-Achse müssen gleich viele Werte liegen, da das arithmetische Mittel den Schwerpunkt der Verteilung symbolisiert.\
+__*Median:*__ Der Median kann an der y-Achse ablesen werden. Genauer gesagt an der Stelle, an der die 50% Marke bei der relativen Häufigkeit im Summenhäufigkeitsdiagramm liegt. In diesem Fall wird der Median auf 16 geschätzt. 
+
+##### **c) Bestimme der Anteil der Tage mit über 20 Einsätzen.**
+```{r}
+Stress.vec <- Service.df$relHfk[3] + Service.df$relHfk[4]
+```
+\
+Die Fragestellung verlangt nach der expliziten Angabe der Einsätze über 20 Einsätze Pro Tage. Durch Addition der relativen Häufigkeit der dritten und vierten statistischen Einheiten kann die Häufigkeit bestimmt werden, mit der mehr als 20 Einätze pro Tag absolviert werden müssen. Bei der dritten statistischen Einheit wird der Intervall mit der unteren Grenze von 20 angegeben. Eine genaue Angabe, wie häufig Tage mit über 20 Einsätzen sind, kann daher an dieser Stelle nicht gemacht werden, da ebendieses Intervall auch 20 Einsätze enthält, in der Fragestellung aber explizit nach ÜBER 20 Einsätzen gefragt wird. Ohne Rücksichtnahme auf diese Unstimmigkeit beträgt die Häufigkeit von mehr als 20 Einsätzen pro Tag rund `r Stress.vec*100` %.
+
+
+##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Welcher Aspekt könnte hier problematisch sein? Warum?**
+__*Zentralmaße*__
+**Modus**
+```{r}
+getmode <- function(Service.vec) {
+   uniqv <- unique(Service.vec)
+   uniqv[which.max(tabulate(match(Service.vec, uniqv)))]
+}
+getmode(Service.vec)
+```
+\
+**Median**
+```{r}
+median(Service.vec)
+```
+\
+**Mittelwert**
+```{r}
+Mittelwert <- sum(Service.df$RelHfgk.vec * Service.df$Klassenmitte)
+
+Mittelwert
+```
+\
+__*Streumaße*__\
+**Minimum**
+```{r}
+min(Service.vec)
+```
+\
+**Maximum**
+```{r}
+max(Service.vec)
+```
+\
+**Spannweite**
+```{r}
+range(Service.vec)
+```
+\
+**Quantile**
+```{r}
+quantile(Service.vec)
+```
+\
+**Standardabweichung**
+```{r}
+sd(Service.vec)
+```
+\
+**Mittlere absolute Abweichung**
+```{r}
+mean(abs(Service.vec-mean(Service.vec)))
+```
+Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe zielführender, da das arithmetische Mittel auch Ausreißer mit berücksichtigt, was beim Median nicht der Fall ist.
+
+
+
+# **B)** VERSTÄNDNISFRAGEN
+
+### **B-1)** Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
+
+### **B-2)** Verschiebungssatz zur Berechnung der Standardabweichung
+
+### **B-3)** Das komma-separierte File **"Fehlerquote.csv"** enthält das Prüfergebnis von 50 Bauteilen auf Funktionstüchtigkeit. Dabei steht der Eintrag **"0"** für ein fehlerfreies Bauteil und **"1"** für ein fehlerhaftes Bauteil.
+
+##### **a) Welche Skalierung hat dieses Merkmal?**
+
+##### **b) Stelle die Messergebnisse in einer Häufigkeitstabelle und grafisch dar.**
+
+##### **c) Wie kann man in diesem Beispiel das arithmetische Mittel berechnen und wofür steht es in diesem Fall?**
+
+##### **d) Wie groß ist die Standardabweichung $\sigma$? Leite eine Formel her und zeige, wie man sie in diesem Fall einfach aus dem arithmetischen Mittel errechnen kann.**
+
+##### **e) Wie müssen die Verteilungen in diesem Fall sein, damit die Streuung maximal bzw. minimal wird?**
+
+
+### **B-4)** Das komma-separierte File **"Verteilungsvergleich.csv"** enthält in 4 Spalten die Daten von folgenden Messreihen: Ergebnis von 40 Würfeln mit einem Würfel (Annahme: gleichverteilt), die Zeitspanne (in Minuten) zwischen 41 vorbeifahrenden Autos (Annahme: exponentialverteilt), die Länge von 40 Telefongesprächen in Minuten (Annahme: normalverteilt) und die Länge von 40 Holzstiften in cm (Annahme: normalverteilt). Vergleiche die vier verschiedenen Verteilungen in den folgenden Fragen:
+
+##### **a) Erstelle für jede Messreihe eine Häufigkeitstabelle sowie eine grafische Darstellung der Häufigkeitsverteilung und der Summenhäufigkeit.**
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 
-##### **c) Bestimme der Anteil der Tage mit über 20 Einsätzen.**
+##### **c) Bestimme für jede Messreihe jene Merkmalsausprägung, unter welcher die kleinsten 25 % zu finden sind.**
 
-##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Welcher Aspekt könnte hier problematisch sein? Warum?**
+##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Versuche die Lage und die Größe der Lageparameter aufgrund der Eigenschaften der Verteilungen zu verstehen. (z.B.: Worauf deutet die verschiedenen Lage von Median und arithmetischem Mittel, wie verhält sich die Standardabweichung zu Streuparametern wie Spannweite oder Interquartilsabstand?)**
+
+##### **e) Zeichne für jede Messreihe einen Boxplot**
 
 
+### **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
+\
+A.K. Dewdney schreibt dazu in seinem Buch "200 Prozent von nichts": Beim Fliegen
+gehen daher Sicherheitsingenieure weder von den Passagierstunden noch von den
+Passagierkilometern aus. Weil die allermeisten Flugunglücke beim Starten oder beim
+Landen geschehen, ist es sinnvoller, die Wahrscheinlichkeit eines Unfalls pro Flug zu
+betrachten. Denn schließlich muss jedes Flugzeug bei jedem Flug sowohl starten als
+auch landen.
 
-# B) VERSTÄNDNISFRAGEN
-
-### B-1) Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
-
-### B-2) Verschiebungssatz zur Berechnung der Standardabweichung:\ Das arithmetische Mittel ist gegeben durch $\mu\ =\ $ und die Varianz ist definiert als $\sigm^2$.\ Zeige die direkte Umformung, dass daraus folgt (Verschiebungssatz):\ $$\sigm^2\ =\ $$
