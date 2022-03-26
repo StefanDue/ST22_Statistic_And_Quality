@@ -395,24 +395,107 @@ Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe 
 
 ### **B-1)** Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
 
+
 ### **B-2)** Verschiebungssatz zur Berechnung der Standardabweichung
+![Herleitung des Verschiebungssatz](../Uebung1/B2.png)
 
 ### **B-3)** Das komma-separierte File **"Fehlerquote.csv"** enthält das Prüfergebnis von 50 Bauteilen auf Funktionstüchtigkeit. Dabei steht der Eintrag **"0"** für ein fehlerfreies Bauteil und **"1"** für ein fehlerhaftes Bauteil.
+```{r}
+Fehlerquote.df <- read.csv("Fehlerquote.csv", sep = ";", dec = ",", header = TRUE)
+```
 
 ##### **a) Welche Skalierung hat dieses Merkmal?**
+Die Skalierung dieses Merkmals entspricht einem normalskalierten dichotomem Merkmal.
+\
 
 ##### **b) Stelle die Messergebnisse in einer Häufigkeitstabelle und grafisch dar.**
+__*Häufigkeitstabelle:*__
+```{r}
+Fehlerquote.vec <- table(Fehlerquote.df$fehlerhaft)/length(Fehlerquote.df$fehlerhaft)
+# Spalte 1 - Zustand 0/1:
+Zustand.vec <- c("fehlerfrei - 0","fehlerhaft - 1")
+# Spalte 2 - rel. Häufigkeit
+Fehlerhaft.vec <- sum(Fehlerquote.df$fehlerhaft)/length(Fehlerquote.df$Nr.)
+RelHfkFehlerquote.vec <- c((1-Fehlerhaft.vec),Fehlerhaft.vec)
+
+HfgTabelle.df <- data.frame(Zustand = Zustand.vec, rel.Häufigkeit = RelHfkFehlerquote.vec)
+HfgTabelle.df
+```
+
+```{r}
+barplot(Fehlerquote.vec, main = "Häufigkeitsverteilung", xlab = "Fehler (0 = kein Fehler, 1 = Fehler)", ylab = "rel. Häufigkeit", ylim = c(0,1.2), col = "blue")
+```
 
 ##### **c) Wie kann man in diesem Beispiel das arithmetische Mittel berechnen und wofür steht es in diesem Fall?**
+Das arithmetische Mittel gibt hier nur an, wie viele Teile fehlerhaft sind, da die Bauteile mit 0, also fehlerfreie Bauteile, nicht miteinberechnet werden.
 
 ##### **d) Wie groß ist die Standardabweichung $\sigma$? Leite eine Formel her und zeige, wie man sie in diesem Fall einfach aus dem arithmetischen Mittel errechnen kann.**
+Standardabweigung:
+```{r}
+sd(Fehlerquote.df$fehlerhaft)
+```
+Standardabweichung über arithmetisches Mittel:
+```{r}
+
+```
 
 ##### **e) Wie müssen die Verteilungen in diesem Fall sein, damit die Streuung maximal bzw. minimal wird?**
 
 
-### **B-4)** Das komma-separierte File **"Verteilungsvergleich.csv"** enthält in 4 Spalten die Daten von folgenden Messreihen: Ergebnis von 40 Würfeln mit einem Würfel (Annahme: gleichverteilt), die Zeitspanne (in Minuten) zwischen 41 vorbeifahrenden Autos (Annahme: exponentialverteilt), die Länge von 40 Telefongesprächen in Minuten (Annahme: normalverteilt) und die Länge von 40 Holzstiften in cm (Annahme: normalverteilt). Vergleiche die vier verschiedenen Verteilungen in den folgenden Fragen:
+### **B-4)** Das komma-separierte File **"Verteilungsvergleich.csv"** enthält in 4 Spalten die Daten von folgenden Messreihen: Ergebnis von 40 Würfeln mit einem Würfel (Annahme: gleichverteilt), die Zeitspanne (in Minuten) zwischen 40 vorbeifahrenden Autos (Annahme: exponentialverteilt), die Länge von 40 Telefongesprächen in Minuten (Annahme: normalverteilt) und die Länge von 40 Holzstiften in cm (Annahme: normalverteilt). Vergleiche die vier verschiedenen Verteilungen in den folgenden Fragen:
+```{r}
+Verteilungsvergleich.df <- read.csv("Verteilungsvergleich.csv", sep = ";", dec = ",", header = TRUE)
+```
+
 
 ##### **a) Erstelle für jede Messreihe eine Häufigkeitstabelle sowie eine grafische Darstellung der Häufigkeitsverteilung und der Summenhäufigkeit.**
+__*Würfel*__
+```{r}
+Würfel.df <- data.frame(Augenzahl = (1:6), abs.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel), rel.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel)/length(Verteilungsvergleich.df$Wuerfel))
+
+Würfel.df <- data.frame(Würfel.df, Summenhfk. = cumsum(Würfel.df$rel.Häufigkeit))
+Würfel.df
+```
+```{r}
+barplot(Würfel.df$abs.Häufigkeit, names = Würfel.df$Augenzahl, ylim = c(0,10), main = "Absolute Häufigkeitsverteilung Würfel", xlab = "Augenzahl", ylab = "abs. Häufigkeit", col = "blue")
+```
+```{r}
+barplot(Würfel.df$rel.Häufigkeit, names = Würfel.df$Augenzahl, col = "blue", main = "Relative Häufigkeitsverteilung Würfeln", xlab = "Augenzahl", ylab = "rel. Häufigkeit", ylim = c(0,0.25))
+```
+```{r}
+plot(Würfel.df$Augenzahl, Würfel.df$Summenhfk., main = "Summenhäufigkeit", xlab = "Augenzahl", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+points(Würfel.df$Augenzahl, Würfel.df$Summenhfk.)
+lines(Würfel.df$Augenzahl, Würfel.df$Summenhfk., type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+```
+__*Wartezeit*__
+```{r}
+Zeit.vec <- c(0,3,6,9,12,15,18)
+Zeitintervalle.vec <- c("[0,3]", "(3,6]", "(6,9]", "(9,12]", "(12,15]", "(15,18]")
+Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Wartezeit_min, breaks = Zeit.vec))
+Wartezeit.df <- data.frame(Zeit = Zeitintervalle.vec, Klassenbreite = rep(3,6), Klassenmitte = c(1.5,4.5,7.5,10.5,13.5,16.5), abs.Häufigkeit = Klasse.vec, rel.Häufigkeit = Klasse.vec/length(Verteilungsvergleich.df$Wartezeit_min))
+
+Wartezeit.df <- data.frame(Wartezeit.df, Summenhfk. = cumsum(Wartezeit.df$rel.Häufigkeit), Dichte = Wartezeit.df$rel.Häufigkeit/Wartezeit.df$Klassenbreite)
+Wartezeit.df
+```
+```{r}
+barplot(Wartezeit.df$abs.Häufigkeit, names = Wartezeit.df$Zeit, main = "Absolute Häufigkeitsverteilung Wartezeit", xlab = "Wartezeit in min", ylab = "abs. Häufigkeit", col = "blue", ylim = c(0,25), space = 0)
+```
+```{r}
+barplot(Wartezeit.df$Dichte, names = Wartezeit.df$Zeit, main = "Histogramm Wartezeit", xlab = "Wartezeit in min", ylab = "Häufigkeitsdichte", space = 0, col = "blue", ylim = c(0,0.2))
+```
+```{r}
+plot(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.), main = "Summenhäufigkeit Wartezeit", xlab = "Wartezeit in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+points(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.))
+lines(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.), type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+```
+
+
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 
