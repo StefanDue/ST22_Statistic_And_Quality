@@ -481,7 +481,7 @@ Wartezeit.df <- data.frame(Wartezeit.df, Summenhfk. = cumsum(Wartezeit.df$rel.H�
 Wartezeit.df
 ```
 ```{r}
-barplot(Wartezeit.df$abs.Häufigkeit, names = Wartezeit.df$Zeit, main = "Absolute Häufigkeitsverteilung Wartezeit", xlab = "Wartezeit in min", ylab = "abs. Häufigkeit", col = "blue", ylim = c(0,25), space = 0)
+barplot(Wartezeit.df$abs.Häufigkeit, names = Wartezeit.df$Zeit, main = "Absolute Häufigkeitsverteilung Wartezeit", xlab = "Wartezeit in min", ylab = "abs. Häufigkeit", col = "blue", ylim = c(0,25))
 ```
 ```{r}
 barplot(Wartezeit.df$Dichte, names = Wartezeit.df$Zeit, main = "Histogramm Wartezeit", xlab = "Wartezeit in min", ylab = "Häufigkeitsdichte", space = 0, col = "blue", ylim = c(0,0.2))
@@ -493,6 +493,39 @@ lines(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.), type = "s", lty = 3)
 abline(0.25, 0, lty = "dashed")
 abline(0.75, 0, lty = "dashed")
 abline(0.5, 0, lty = "dashed", col = "red")
+```
+\
+__*Telegespräche*__
+```{r}
+Dauer.vec <- c(0,2,4,6,8,10,12,14,16)
+Dauer_Intervall.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]", "(10,12]", "(12,14]", "(14,16]")
+Dauer_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Telgesprae_min, breaks = Dauer.vec))
+Gesprächsdauer.df <- data.frame(Gesprächsdauer = Dauer_Intervall.vec, Klassenbreite = rep(2,8), Klassenmitte = c(1,3,5,7,9,11,13,15), abs.Häufigkeit = Dauer_Klasse.vec, rel.Häufigkeit = Dauer_Klasse.vec/length(Verteilungsvergleich.df$Telgesprae_min))
+
+Gesprächsdauer.df <- data.frame(Gesprächsdauer.df, Summenhfk. = cumsum(Gesprächsdauer.df$rel.Häufigkeit), Dichte = Gesprächsdauer.df$rel.Häufigkeit/Gesprächsdauer.df$Klassenbreite)
+
+Gesprächsdauer.df
+```
+```{r}
+barplot(Gesprächsdauer.df$abs.Häufigkeit, names = Gesprächsdauer.df$Gesprächsdauer, ylim = c(0,35), col = "blue", main = "Absolute Häufigkeit Dauer Telefongespräche", ylab = "abs. Häufigkeit", xlab = "Gesprächsdauer in min")
+```
+```{r}
+barplot(Gesprächsdauer.df$Dichte, names = Gesprächsdauer.df$Gesprächsdauer, ylim = c(0,0.5), col = "blue", main = "Histogram Dauer Telefongespräch", ylab = "Häufigkeitsdichte", xlab = "Gesprächsdauer in min", space = 0)
+```
+```{r}
+plot(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), main =  "Summenhäufigkeit", xlab = "Gesprächsdauer in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+points(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.))
+lines(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
+```
+__*Stiftlänge*__
+```{r}
+Länge.vec <- c(3.3,3.4,3.45,3.5,3.55,3.6,3.65,3.7,3.75,3.8)
+Länge_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Stiftlaenge_cm, breaks = Länge.vec))
+
+Stiftlänge.df <- data.frame(Länge = Länge.vec, Klassenmitte = c(3.35,3.45,3.55,3.65,3.75))
 ```
 
 
