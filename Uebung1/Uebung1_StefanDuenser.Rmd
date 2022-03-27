@@ -513,7 +513,7 @@ barplot(Gesprächsdauer.df$abs.Häufigkeit, names = Gesprächsdauer.df$Gespräch
 barplot(Gesprächsdauer.df$Dichte, names = Gesprächsdauer.df$Gesprächsdauer, ylim = c(0,0.5), col = "blue", main = "Histogram Dauer Telefongespräch", ylab = "Häufigkeitsdichte", xlab = "Gesprächsdauer in min", space = 0)
 ```
 ```{r}
-plot(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), main =  "Summenhäufigkeit", xlab = "Gesprächsdauer in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+plot(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), main =  "Summenhäufigkeit Telefongespräch", xlab = "Gesprächsdauer in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
 points(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.))
 lines(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), type = "s", lty = 3)
 abline(0.25, 0, lty = "dashed")
@@ -522,10 +522,30 @@ abline(0.5, 0, lty = "dashed", col = "red")
 ```
 __*Stiftlänge*__
 ```{r}
-Länge.vec <- c(3.3,3.4,3.45,3.5,3.55,3.6,3.65,3.7,3.75,3.8)
+Länge.vec <- c(3.3,3.4,3.5,3.6,3.7,3.8)
+Länge_Intervall.vec <- c("[3.3,3.4]", "(3.4,3.5]", "(3.5,3.6]", "(3.6,3.7]", "(3.7,3.8]")
 Länge_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Stiftlaenge_cm, breaks = Länge.vec))
 
-Stiftlänge.df <- data.frame(Länge = Länge.vec, Klassenmitte = c(3.35,3.45,3.55,3.65,3.75))
+Stiftlänge.df <- data.frame(Länge = Länge_Intervall.vec, Klassenmitte = c(3.35,3.45,3.55,3.65,3.75), Klassenbreite = rep(0.1,5), abs.Häufigkeit = Länge_Klasse.vec, rel.Häufigkeit = Länge_Klasse.vec/length(Verteilungsvergleich.df$Stiftlaenge_cm))
+
+Stiftlänge.df <- data.frame(Stiftlänge.df, Summenhfk. = cumsum(Stiftlänge.df$rel.Häufigkeit), Dichte = Stiftlänge.df$rel.Häufigkeit/Stiftlänge.df$Klassenbreite)
+
+Stiftlänge.df
+```
+```{r}
+barplot(Stiftlänge.df$abs.Häufigkeit, names = Länge_Intervall.vec, main = "Absolute Häufigkeit Stiftlänge", ylab = "abs. Häufigkeit", ylim = c(0,20), xlab = "Stiftlänge in cm", col = "blue")
+```
+```{r}
+barplot(Stiftlänge.df$Dichte, names = Länge_Intervall.vec, main = "Histogramm Stiftlänge", col = "blue", space = 0, xlab = "Stiftlänge in cm", ylab = "rel.Häufigkeit", ylim = c(0,4))
+```
+```{r}
+plot(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.), main = "Summenhäufigkeit Stiftlänge", xlab = "Stiftlänge in cm", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+
+points(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.))
+lines(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.), type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
 ```
 
 
