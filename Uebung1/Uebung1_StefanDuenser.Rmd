@@ -790,13 +790,44 @@ boxplot(Verteilungsvergleich.df$Stiftlaenge_cm, main = "Stiftlänge", ylab = "St
 ```
 
 
-
 ### **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
-\
-A.K. Dewdney schreibt dazu in seinem Buch "200 Prozent von nichts": Beim Fliegen
-gehen daher Sicherheitsingenieure weder von den Passagierstunden noch von den
-Passagierkilometern aus. Weil die allermeisten Flugunglücke beim Starten oder beim
-Landen geschehen, ist es sinnvoller, die Wahrscheinlichkeit eines Unfalls pro Flug zu
-betrachten. Denn schließlich muss jedes Flugzeug bei jedem Flug sowohl starten als
-auch landen.
+Wie sich aus der Statistik ableiten lässt, ist laut Fluggesellschaft das Fliegen rund 10 Mal sicherer als eine Autofahrt. Gleichzeitig wird aber auch angegeben, dass ein Flugzeug im Durchschnitt auch 10 Mal so schnell fliegt, als ein Auto fährt. Innerhalb eines gleichen Zeitabschnitts legt ein Flugzeug 48 Mio. Kilometer zurück, ein Auto hingegen nur 4,8 Mio Kilometer. Aus der Angabe geht hervor, dass für beide Strecken jeweils ein Todesopfer zu beklagen ist. Das Sterberisiko ist zwar pro Kilometer Flugstrecke geringer als pro Kilometer Autofahrt, Für eine bestimmte Reisezeit ist das Risiko zu Sterben allerdings gleich groß. Die Pro-Auto-Initiative könnte also angeben, dass pro Reisestunde das Sterberisiko bei einer Autofahrt gleich groß ist wie bei der Reise mit einem Flugzeug. 
+
+
+### **B-6)** Will Rogers Phänomen. 
+
+
+
+### **B-7)** Simpsons Paradoxon.
+
+
+
+### **B-8)** Studienplatz an einer Hochschule
+
+
+### **C-1)** Offene Untersuchung: Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
+```{r}
+Unternehmensumsätze.df <- read.csv("Unternehmensumsaetze.csv", sep = ";", dec = ",", header = TRUE)
+Unternehmensumsätze.df
+```
+**Verteilung der Unternehmen nach den jeweiligen Länder**
+```{r}
+Land.df <- data.frame(table(Unternehmensumsätze.df$Land))
+names(Land.df) <- c("Staat", "Anzahl Unternehmen")
+Land.df[order(Land.df$Anzahl, decreasing = TRUE),]
+```
+**Sortierung nach Branchen**
+```{r}
+Branche.df <- data.frame(table(Unternehmensumsätze.df$Branche))
+names(Branche.df) <- c("Branche", "Anzahl")
+Branche.df[order(Branche.df$Anzahl, decreasing = TRUE),]
+```
+**Umsätze pro Mitarbeiter je Branche**
+```{r}
+Mitarbeiter.df <- data.frame(table(Unternehmensumsätze.df$Mitarbeiter))
+names(Mitarbeiter.df) <- c("Mitarbeiter", "Anzahl")
+Mitarbeiter.df[order(Mitarbeiter.df$Anzahl, decreasing = TRUE),]
+```
+
+
 
