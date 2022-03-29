@@ -463,7 +463,7 @@ barplot(Würfel.df$abs.Häufigkeit, names = Würfel.df$Augenzahl, ylim = c(0,10)
 barplot(Würfel.df$rel.Häufigkeit, names = Würfel.df$Augenzahl, col = "blue", main = "Relative Häufigkeitsverteilung Würfeln", xlab = "Augenzahl", ylab = "rel. Häufigkeit", ylim = c(0,0.25))
 ```
 ```{r}
-plot(Würfel.df$Augenzahl, Würfel.df$Summenhfk., main = "Summenhäufigkeit", xlab = "Augenzahl", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+plot(Würfel.df$Augenzahl, Würfel.df$Summenhfk., main = "Summenhäufigkeit Würfel", xlab = "Augenzahl", ylab = "rel. Häufigkeit", type = "l", lty = 1)
 points(Würfel.df$Augenzahl, Würfel.df$Summenhfk.)
 lines(Würfel.df$Augenzahl, Würfel.df$Summenhfk., type = "s", lty = 3)
 abline(0.25, 0, lty = "dashed")
@@ -525,8 +525,7 @@ __*Stiftlänge*__
 Länge.vec <- c(3.3,3.4,3.5,3.6,3.7,3.8)
 Länge_Intervall.vec <- c("[3.3,3.4]", "(3.4,3.5]", "(3.5,3.6]", "(3.6,3.7]", "(3.7,3.8]")
 Länge_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Stiftlaenge_cm, breaks = Länge.vec))
-
-Stiftlänge.df <- data.frame(Länge = Länge_Intervall.vec, Klassenmitte = c(3.35,3.45,3.55,3.65,3.75), Klassenbreite = rep(0.1,5), abs.Häufigkeit = Länge_Klasse.vec, rel.Häufigkeit = Länge_Klasse.vec/length(Verteilungsvergleich.df$Stiftlaenge_cm))
+Stiftlänge.df <- data.frame(Stiftlänge = Länge_Intervall.vec, Klassenbreite = rep(0.1,5), Klassenmitte = c(3.35,3.45,3.55,3.65,3.75), abs.Häufigkeit = Länge_Klasse.vec, rel.Häufigkeit = Länge_Klasse.vec/length(Verteilungsvergleich.df$Stiftlaenge_cm))
 
 Stiftlänge.df <- data.frame(Stiftlänge.df, Summenhfk. = cumsum(Stiftlänge.df$rel.Häufigkeit), Dichte = Stiftlänge.df$rel.Häufigkeit/Stiftlänge.df$Klassenbreite)
 
@@ -535,8 +534,9 @@ Stiftlänge.df
 ```{r}
 barplot(Stiftlänge.df$abs.Häufigkeit, names = Länge_Intervall.vec, main = "Absolute Häufigkeit Stiftlänge", ylab = "abs. Häufigkeit", ylim = c(0,20), xlab = "Stiftlänge in cm", col = "blue")
 ```
+Aufgrund der unglücken Wahl der Maße in cm und der geringen Steuung sowie der folglichen geringen Klassenbreite, wird hier kein Diagramm der Häufigkeitsdichte, sondern ein Diagramm der rel. Häufigkeit erstellt. 
 ```{r}
-barplot(Stiftlänge.df$Dichte, names = Länge_Intervall.vec, main = "Histogramm Stiftlänge", col = "blue", space = 0, xlab = "Stiftlänge in cm", ylab = "rel.Häufigkeit", ylim = c(0,4))
+barplot(Stiftlänge.df$rel.Häufigkeit, names = Länge_Intervall.vec, space = 0, col = "blue", ylim = c(0,0.4), xlab = "Stiftlänge in cm", ylab = "rel. Häufigkeit", main = "Relative Häufigkeitsverteilung Stiftlänge")
 ```
 ```{r}
 plot(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.), main = "Summenhäufigkeit Stiftlänge", xlab = "Stiftlänge in cm", ylab = "rel. Häufigkeit", type = "l", lty = 1)
@@ -548,15 +548,247 @@ abline(0.75, 0, lty = "dashed")
 abline(0.5, 0, lty = "dashed", col = "red")
 ```
 
-
-
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+__*Würfel:*__\
+arithmetisches Mittel: 3,5\
+Median: 3\
+__*Wartezeit:*__\
+arithmetisches Mittel: liegt im Intervall [0,3] und beträgt geschätzt 3\
+Median: 2,8\
+__*Telefongespräche:*__\
+arithmetisches Mittel: liegt im Intervall (2,4] und beträgt geschätzt 3\
+Median: 3,5\
+__*Stiftlänge:*__\
+arithmetisches Mittel: liegt im Intervall (3.5,3.6] und beträgt geschätzt 3,55\
+Median: 3,51\
+
 
 ##### **c) Bestimme für jede Messreihe jene Merkmalsausprägung, unter welcher die kleinsten 25 % zu finden sind.**
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Versuche die Lage und die Größe der Lageparameter aufgrund der Eigenschaften der Verteilungen zu verstehen. (z.B.: Worauf deutet die verschiedenen Lage von Median und arithmetischem Mittel, wie verhält sich die Standardabweichung zu Streuparametern wie Spannweite oder Interquartilsabstand?)**
+**Würfel:**\
+__*Zentralmaße*__\
+Modus:
+```{r}
+Modus_Wuerfel.vec <- Verteilungsvergleich.df$Wuerfel
+getmode <- function(Modus_Wuerfel.vec) {
+   uniqv <- unique(Modus_Wuerfel.vec)
+   uniqv[which.max(tabulate(match(Modus_Wuerfel.vec, uniqv)))]
+}
+getmode(Modus_Wuerfel.vec)
+```
+\
+Median:
+```{r}
+median(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Mittelwert:
+```{r}
+mean(Verteilungsvergleich.df$Wuerfel)
+```
+\
+__*Streumaße*__\
+Minimum:
+```{r}
+min(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Maximum:
+```{r}
+max(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Spannweite:
+```{r}
+range(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Quantile:
+```{r}
+quantile(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Standardabweichung:
+```{r}
+sd(Verteilungsvergleich.df$Wuerfel)
+```
+\
+Mittlere absolute Abweichung:
+```{r}
+mean(abs(Verteilungsvergleich.df$Wuerfel-mean(Verteilungsvergleich.df$Wuerfel)))
+```
+\
+**Wartezeit**\
+__*Zentralmaße*__\
+Modus:
+```{r}
+Modus_Wartezeit.vec <- Verteilungsvergleich.df$Wartezeit_min
+getmode <- function(Modus_Wartezeit.vec) {
+   uniqv <- unique(Modus_Wartezeit.vec)
+   uniqv[which.max(tabulate(match(Modus_Wartezeit.vec, uniqv)))]
+}
+getmode(Modus_Wartezeit.vec)
+```
+\
+Median:
+```{r}
+median(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Mittelwert:
+```{r}
+mean(Verteilungsvergleich.df$Wartezeit_min)
+```
+__*Streumaße*__\
+Minimum:
+```{r}
+min(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Maximum:
+```{r}
+max(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Spannweite:
+```{r}
+range(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Quantile:
+```{r}
+quantile(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Standardabweichung:
+```{r}
+sd(Verteilungsvergleich.df$Wartezeit_min)
+```
+\
+Mittlere absolute Abweichung:
+```{r}
+mean(abs(Verteilungsvergleich.df$Wartezeit_min-mean(Verteilungsvergleich.df$Wartezeit_min)))
+```
+
+**Telefongespräch**\
+__*Zentralmaße*__\
+Modus:
+```{r}
+Modus_Telefongespräch.vec <- Verteilungsvergleich.df$Telgesprae_min
+getmode <- function(Modus_Telefongespräch.vec) {
+   uniqv <- unique(Modus_Telefongespräch.vec)
+   uniqv[which.max(tabulate(match(Modus_Telefongespräch.vec, uniqv)))]
+}
+getmode(Modus_Telefongespräch.vec)
+```
+\
+Median:
+```{r}
+median(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Mittelwert:
+```{r}
+mean(Verteilungsvergleich.df$Telgesprae_min)
+```
+__*Streumaße*__\
+Minimum:
+```{r}
+min(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Maximum:
+```{r}
+max(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Spannweite:
+```{r}
+range(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Quantile:
+```{r}
+quantile(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Standardabweichung:
+```{r}
+sd(Verteilungsvergleich.df$Telgesprae_min)
+```
+\
+Mittlere absolute Abweichung:
+```{r}
+mean(abs(Verteilungsvergleich.df$Telgesprae_min-mean(Verteilungsvergleich.df$Telgesprae_min)))
+```
+
+**Stiftlänge**\
+__*Zentralmaße*__\
+Modus:
+```{r}
+Modus_Stiftlänge.vec <- Verteilungsvergleich.df$Stiftlaenge_cm
+getmode <- function(Modus_Stiftlänge.vec) {
+   uniqv <- unique(Modus_Stiftlänge.vec)
+   uniqv[which.max(tabulate(match(Modus_Stiftlänge.vec, uniqv)))]
+}
+getmode(Modus_Stiftlänge.vec)
+```
+\
+Median:
+```{r}
+median(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Mittelwert:
+```{r}
+mean(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+__*Streumaße*__\
+Minimum:
+```{r}
+min(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Maximum:
+```{r}
+max(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Spannweite:
+```{r}
+range(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Quantile:
+```{r}
+quantile(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Standardabweichung:
+```{r}
+sd(Verteilungsvergleich.df$Stiftlaenge_cm)
+```
+\
+Mittlere absolute Abweichung:
+```{r}
+mean(abs(Verteilungsvergleich.df$Stiftlaenge_cm-mean(Verteilungsvergleich.df$Stiftlaenge_cm)))
+```
 
 ##### **e) Zeichne für jede Messreihe einen Boxplot**
+```{r}
+boxplot(Verteilungsvergleich.df$Wuerfel, col = "blue", main = "Würfel", ylab = "Augenzahl")
+```
+```{r}
+boxplot(Verteilungsvergleich.df$Wartezeit_min, col = "blue", ylab = "Wartezeit in min", main = "Wartezeit")
+```
+```{r}
+boxplot(Verteilungsvergleich.df$Telgesprae_min, main = "Telefongespräch", ylab = "Dauer Telefongespräch", col = "blue")
+```
+```{r}
+boxplot(Verteilungsvergleich.df$Stiftlaenge_cm, main = "Stiftlänge", ylab = "Stiftlänge in cm", col = "blue")
+```
+
 
 
 ### **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
