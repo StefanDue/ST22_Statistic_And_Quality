@@ -806,28 +806,105 @@ Wie sich aus der Statistik ableiten lässt, ist laut Fluggesellschaft das Fliege
 
 
 ### **C-1)** Offene Untersuchung: Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
+\
+**Verteilung der Unternehmen nach den Branchen**
 ```{r}
 Unternehmensumsätze.df <- read.csv("Unternehmensumsaetze.csv", sep = ";", dec = ",", header = TRUE)
 Unternehmensumsätze.df
 ```
-**Verteilung der Unternehmen nach den jeweiligen Länder**
+\
+**Verteilung der Unternehmen nach den jeweiligen Länder in dem das Unternehmen seinen Hauptwohnsitz hat**
 ```{r}
-Land.df <- data.frame(table(Unternehmensumsätze.df$Land))
-names(Land.df) <- c("Staat", "Anzahl Unternehmen")
+Land.df <- data.frame(table(Unternehmensumsätze.df$Land)) 
+names(Land.df) <- c("Staat" , "Anzahl") 
 Land.df[order(Land.df$Anzahl, decreasing = TRUE),]
 ```
-**Sortierung nach Branchen**
+\
+**Verteilung der Unternehmen nach Branchen**
 ```{r}
 Branche.df <- data.frame(table(Unternehmensumsätze.df$Branche))
 names(Branche.df) <- c("Branche", "Anzahl")
 Branche.df[order(Branche.df$Anzahl, decreasing = TRUE),]
 ```
-**Umsätze pro Mitarbeiter je Branche**
+\
+**Verteilung der Unternehmen nach Hauptsitz**
 ```{r}
-Mitarbeiter.df <- data.frame(table(Unternehmensumsätze.df$Mitarbeiter))
-names(Mitarbeiter.df) <- c("Mitarbeiter", "Anzahl")
-Mitarbeiter.df[order(Mitarbeiter.df$Anzahl, decreasing = TRUE),]
+Hauptsitz.df <- data.frame(table(Unternehmensumsätze.df$Hauptsitz)) 
+names(Hauptsitz.df) <- c("Hauptsitz" , "Anzahl") 
+Hauptsitz.df[order(Hauptsitz.df$Anzahl, decreasing = TRUE),]
+```
+\
+**Aufteilung nach Unternehmensumsätze**
+```{r}
+summary(Unternehmensumsätze.df$Umsatz)
 ```
 
+```{r}
+hist(Unternehmensumsätze.df$Umsatz, c(0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500), col = "blue", main = "Histogramm der Unternehmensumsätze", xlab = "Umsatz in Mrd. $", ylab = "Anzahl der Unternehmen", ylim = c(0,40))
+```
+\
+**Aufteilung nach Unternehmensgewinnen**
+```{r}
+summary(Unternehmensumsätze.df$Gewinn)
+```
+```{r}
+Breaks.vec <- c(-20,-10,0,10,20,30,40,50,60,70,80,90)
 
+hist(Unternehmensumsätze.df$Gewinn, Breaks.vec, main = "Histogramm der Unternehmensgewinne", xlab = "Gewinn in Mrd. $", ylab = "Anzahl der Unternehmen", col = "blue", xlim = c(-20,100))
+```
+\
+**Sortierung nach Umsatz je Mitarbeiter in $**
+```{r}
+Mitarbeit_Bran.vec <- aggregate(Unternehmensumsätze.df$Mitarbeiter, by = list(Branche = Unternehmensumsätze.df$Branche), FUN = sum)
 
+Umsatz_Bran.vec <- aggregate(Unternehmensumsätze.df$Umsatz, by = list(Branche = Unternehmensumsätze.df$Branche), FUN = sum)
+
+Umsatz_Mitarbeit_Bran.df <- data.frame(Bran = Umsatz_Bran.vec$Branche, Ums_Mit = 1000000000*Umsatz_Bran.vec$x/Mitarbeit_Bran.vec$x)
+
+names(Umsatz_Mitarbeit_Bran.df) <- c("Branche", "Umsatz_je_Mitarbeiter")
+Umsatz_Mitarbeit_Bran.df[order(Umsatz_Mitarbeit_Bran.df$Umsatz_je_Mitarbeiter, decreasing = TRUE),]
+```
+Im Rohstoffsektor und im Pharmaunternehmen sind die vergleichsweise größten Gewinne je Mitarbeiter zu erzielen. Im Rohstoffhandel betragen die Umsätze rund 4,6 Mio. \$ je Mitarbeiter.
+
+\
+**Sortierung nach Gewinn je Mitarbeiter nach Branche in $**
+```{r}
+Gewinn_Bran.vec <- aggregate(Unternehmensumsätze.df$Gewinn, by = list(Branche = Unternehmensumsätze.df$Branche), FUN = sum)
+
+Gewinn_Mitarbeit_Bran.df <- data.frame(Bran = Gewinn_Bran.vec$Branche, Gew_Mit = 1000000000*Gewinn_Bran.vec$x/Mitarbeit_Bran.vec$x)
+
+names(Gewinn_Mitarbeit_Bran.df) <- c("Branche", "Gewinn_je_Mitarbeiter")
+Gewinn_Mitarbeit_Bran.df[order(Gewinn_Mitarbeit_Bran.df$Gewinn_je_Mitarbeiter, decreasing = TRUE),]
+```
+Die höchsten Gewinne je Mitarbeiter können mit rund 570.00 \$ je Mitarbeiter die Unternehmen in der Pharmazie aufweisen. 
+\
+**Sortierung nach Gewinn je Mitarbeiter nach Unternehmen in $**
+```{r}
+Mitarbeit_Firma.vec <- aggregate(Unternehmensumsätze.df$Mitarbeiter, by = list(Firma = Unternehmensumsätze.df$Name), FUN = sum)
+
+Gewinn_Firma.vec <- aggregate(Unternehmensumsätze.df$Gewinn, by = list(Firma = Unternehmensumsätze.df$Name), FUN = sum)
+
+Gewinn_Mitarbeit_Firma.df <- data.frame(Firma = Gewinn_Firma.vec$Firma, Gew_Mit = 1000000000*Gewinn_Firma.vec$x/Mitarbeit_Firma.vec$x)
+
+names(Gewinn_Mitarbeit_Firma.df) <- c("Firma", "Gewinn_je_Mitarbeiter")
+Gewinn_Mitarbeit_Firma.df[order(Gewinn_Mitarbeit_Firma.df$Gewinn_je_Mitarbeiter, decreasing = TRUE),]
+```
+\
+**Regressionsgerade durch die Merkmale "Mitarbeiter" und "Gewinn"**
+```{r}
+plot(Unternehmensumsätze.df$Mitarbeiter/1000000, Unternehmensumsätze.df$Gewinn, main = "Regression Mitarbeiter/Gewinn", xlab = "Mitarbeiter in Mio.", ylab = "Gewinn")
+abline(lm(Unternehmensumsätze.df$Gewinn~Unternehmensumsätze.df$Mitarbeiter), col = "red")
+```
+\
+Den größten Ausreißer, also das Unternehmen, das den größten Gewinn je Mitarbeiter erzielt, gibt es bei der Firma Fanni Mae mit fast 12 Mrd. \$ Gewinn je Mitarbeiter. Berechnet wird dieser Ausreißer in der vorherigen Berechnung bei "Sortierung nach Gewinn je Mitarbeiter nach Unternehmen in \$"
+
+\
+**Lorenzkurve angewandt auf die Merkmale "Umsätze" und "Mitarbeiter"**
+```{r}
+"ineq" %in% installed.packages()
+#install.packages("ineq")
+library(ineq)
+
+par(pty = "s")
+plot(Lc(Unternehmensumsätze.df$Mitarbeiter, Unternehmensumsätze.df$Umsatz), main = "Umsätze je Mitarbeiter", xlab = "Mitarbeiter", ylab = "Umsätze")
+```
