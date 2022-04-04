@@ -2,25 +2,27 @@
 title: "Statistik und Qualität - Ausarbeitung der ersten Übung"
 author: "Stefan Dünser"
 output:
-  html_document:
-    df_print: paged
   pdf_document: default
   word_document: default
+  html_document:
+    df_print: paged
 ---
 # A) TECHNISCHE FERTIGKEITEN\
-### A-1) Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?
-* **a) Studierende an einer Hochschule.**
+## A-1) Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?
+**a) Studierende an einer Hochschule.**
   * Bestandsgröße
-* **b) Hochzeiten am Standesamt einer Gemeinde.**
+**b) Hochzeiten am Standesamt einer Gemeinde.**
   * Bewegungsgröße
-* **c) Bei der Behörde gemeldete Personenkraftwagen.**
+**c) Bei der Behörde gemeldete Personenkraftwagen.**
   * Bestandsgröße
-* **d) Maschinenausfälle in einer Werkstatt.**
+**d) Maschinenausfälle in einer Werkstatt.**
   * Bewegungsgröße
-* **e) Wartende Kunden vor einem Abfertigungsschalter.**
+**e) Wartende Kunden vor einem Abfertigungsschalter.**
   * Bestandsgröße
-  
-### A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
+\
+\
+
+## A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
 ```{r}
 Liste.vec <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
 Liste.vec
@@ -36,42 +38,47 @@ Liste.vec
   * Metrische Skalierung (Kardinalskala), die verhältnisskaliert ist
 
 ##### **b) Ermittle die absolute und relative Häufigkeitstabelle der eingehenden Anrufe und stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
-
-##### **Absolute Häufigkeit:**
+\
+**Absolute Häufigkeit:**
 ```{r}
 table(Liste.vec)
 ```
 
 ```{r}
-barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col.main = "darkblue", col = "blue")
+barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col = "blue")
 ```
-
-##### **Relative Häufigkeit:**
+\
+**Relative Häufigkeit:**
 ```{r}
 table(Liste.vec)/length(Liste.vec)
 ```
 
 ```{r}
-barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6)))/sum(table(Liste.vec)), ylim = c(0,0.4), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls",ylab = "relative Häufigkeit", main = "Relative Häufigkeitsverteilung", col.main = "darkblue", col = "blue")
+barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6)))/sum(table(Liste.vec)), ylim = c(0,0.4), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls",ylab = "relative Häufigkeit", main = "Relative Häufigkeitsverteilung", col = "blue")
 ```
-##### **Summenhäufigkeit**
+\
+**Summenhäufigkeit**
 ```{r}
 cumsum(table(Liste.vec))
 ```
 ```{r}
-barplot(cumsum(table(factor(Liste.vec,levels = c(0,1,2,3,4,5,6))))/sum(table(Liste.vec)), ylim = c(0,1.2), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Relative Summenhäufigkeit", main = "Summenhäufigkeit", col.main = "darkblue", col = "blue")
+barplot(cumsum(table(factor(Liste.vec,levels = c(0,1,2,3,4,5,6))))/sum(table(Liste.vec)), ylim = c(0,1.2), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Relative Summenhäufigkeit", main = "Summenhäufigkeit", col = "blue")
 abline(0.25, 0, lty = "dashed")
 abline(0.5, 0, lty = "dashed", col = "red")
 abline(0.75, 0, lty = "dashed")
 ```
 
 ##### **c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
-__*Arithmetisches Mittel:*__ Das arithmestische Mittel kann als Schwerpunkt der Häufigkeitsverteilung angesehen werden. In diesem Fall beträgt das arithmetische Mittel nach Abschätzung rund 1,5, da somit links und rechts der x-Achse in etwa gleich viele Werte sind. 
+\
+__*Arithmetisches Mittel:*__ Das arithmestische Mittel kann als Schwerpunkt der Häufigkeitsverteilung angesehen werden. In diesem Fall beträgt das arithmetische Mittel nach Abschätzung rund 1,5, da somit links und rechts der x-Achse in etwa gleich viele Werte sind.
+\
 __*Median:*__ Der Median wird über die y-Achse ermittelt. Der Median befindet sich dann auf der x-Achse an dem Punkt, an dem 50% des y-Werts erreicht sind. In diesem Fall ist der Median bei 1.
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße)**
-__*Zentralmaße:**__\
-*__**Modus**__*
+\
+**Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 getmode <- function(Liste.vec) {
    uniqv <- unique(Liste.vec)
@@ -80,53 +87,56 @@ getmode <- function(Liste.vec) {
 mode <- getmode(Liste.vec)
 mode
 ```
-
-**Median**
+__*Median*__
 ```{r}
 median(Liste.vec)
 ```
-**Arithmetisches Mittel**
+__*Arithmetisches Mittel*__
 ```{r}
 mean(Liste.vec)
 ```
 \
-__*Streumaße:*__
-Minimum
+**Streumaße:**
+\
+__*Minimum*__
 ```{r}
 Minimum <- min(Liste.vec)
 Minimum
 
 ```
-**Maximum**
+__*Maximum*__
 ```{r}
 Maximum <- max(Liste.vec)
 Maximum
 ```
-**Spannweite**
+__*Spannweite*__
 ```{r}
 Spannweite <- range(Liste.vec)
 Spannweite
 ```
-**Quantile**
+__*Quantile*__
 ```{r}
 quantile(Liste.vec)
 ```
-**Mittlere absolute Abweichung**
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Liste.vec-mean(Liste.vec)))
 ```
-**Standardabweichung**
+__*Standardabweichung*__
 ```{r}
 sd(Liste.vec)
 ```
 ##### **e) Stelle die Daten in einem Boxplot dar**
+\
 ```{r}
 boxplot(Liste.vec, col = "blue")
 ```
 \
 Besonders Auffällig ist bei diesem Boxplot bzw. den Werten aus der Liste, dass der Median und das erste Quartil (25% Quantil) zusammenfallen. Die Werte 4 Anrufe sowie 6 Anrufe innerhalb eines 10-Minuten_Zeitintervalls werden hier als Ausreißer aufgefasst und als Kreis dargestellt. 
+\
+\
 
-### A-3) Eine Anzahl von 1000 Kleinmotoren weist folgende Lebensdauer auf:
+## A-3) Eine Anzahl von 1000 Kleinmotoren weist folgende Lebensdauer auf:
 ```{r}
 Klassen.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]")
 Anzahl.vec <- c(33,276,404,237,50)
@@ -167,10 +177,12 @@ Lebensdauer.df
 ```
 
 ##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
+\
 **Absolute Häufigkeitsverteilung**
 ```{r}
 barplot(Lebensdauer.df$Anzahl_Motoren, names=Lebensdauer.df$Lebensdauer, col = "blue", xlab = "Lebensdauer in Jahre", ylab = "Anzahl der Motoren", main = "Absolute Häufigkeitsverteilung", ylim = c(0,500))
 ```
+\
 **Relative Häufigkeitsverteilung**
 ```{r}
 barplot(Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren), ylim = c(0,0.6), xlab = "Lebensdauer in Jahre", ylab = "rel. Häufigkeit", col = "blue", main = "Relative Häufigkeitsverteilung")
@@ -189,30 +201,35 @@ abline(0.75, 0, lty = "dashed")
 ```
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
-
-__*Arithmetisches Mittel - geschätzt:*__ Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.\
+\
+__*Arithmetisches Mittel - geschätzt:*__ Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.
+\
 __*Median:*__ Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgelesen werden. Der Median beträgt schätzungsweise bei 4.
 
 
 ##### **c) Bestimme der Anteil der Motoren mit über 6 Jahren Lebensdauer.**
+\
 ```{r}
 LangeLebensdauer.vec <- Lebensdauer.df$Anzahl_Motoren[4] + Lebensdauer.df$Anzahl_Motoren[5]
 
 LangeLebensdauer.vec
 ```
 Motoren mit Lebensdauern über 6 Jahren befinden sich in der Liste in den letzten beiden statistischen Einheiten. Über die [] kann auf spezielle Vektorelemente/Listenelemente zugegriffen werden. In diesem Fall wird auf die Listenelemente 4 und 5 zugegriffen und für die Anzahl der Motoren, die länger als 6 Jahre laufen, addiert. Somit laufen `r LangeLebensdauer.vec` Motoren länger als 6 Jahre.
-
+\
 **Lebensdauer von Motoren**
 ```{r}
 barplot(Lebensdauer.df$Dichte, names=Lebensdauer.df$Lebensdauer, main = "Lebensdauer von Motoren", xlab = "Lebensdauer in Jahre", ylab = "Häufigkeitsdichte", ylim = c(0,0.3), space = 0, col = "blue")
 ```
+
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße).**
+\
 ```{r}
 Lebensdauer.vec <- c(rep(1,33), rep(3,276), rep(5,404), rep(7,237), rep(9,50))
 ```
-
-__*Zentralmaße*__
-**Modus**
+\
+**Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 getmode <- function(Lebensdauer.vec) {
    uniqv <- unique(Lebensdauer.vec)
@@ -220,71 +237,62 @@ getmode <- function(Lebensdauer.vec) {
 }
 getmode(Lebensdauer.vec)
 ```
-\
-**Median**
+__*Median*__
 ```{r}
 median(Lebensdauer.vec)
 ```
-\
-**Mittelwert**
+__*Mittelwert*__
 ```{r}
 Mittelwert <- sum(Lebensdauer.df$RelHfgk.vec * Lebensdauer.df$Klassenmitte)
 
 Mittelwert
 ```
 \
-__*Streumaße*__\
-**Minimum**
+**Streumaße:**
+\
+__*Minimum*__
 ```{r}
 min(Lebensdauer.vec)
 ```
-\
-**Maximum**
+__*Maximum*__
 ```{r}
 max(Lebensdauer.vec)
 ```
-\
-**Spannweite**
+__*Spannweite*__
 ```{r}
 range(Lebensdauer.vec)
 ```
-\
-**Quantile**
+__*Quantile*__
 ```{r}
 quantile(Lebensdauer.vec)
 ```
-\
-**Standardabweichung**
+__*Standardabweichung*__
 ```{r}
 sd(Lebensdauer.vec)
 ```
-\
-**Mittlere absolute Abweichung**
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Lebensdauer.vec-mean(Lebensdauer.vec)))
 ```
+\
 In diesem Beispiel ist der Modus 5. Da es 5 Jahre Lebensdauer nicht gibt, ist die richtige Antwort, dass der Modus das einseitig offene Intervall (4,6] ist. 
+\
+\
 
-
-### A-4) Ein technisches Servicecenter zeichnet an 100 Tagen die Häufigkeit der Einsätze auf. Es ergibt sich folgende Tabelle:
+## A-4) Ein technisches Servicecenter zeichnet an 100 Tagen die Häufigkeit der Einsätze auf. Es ergibt sich folgende Tabelle:
 ```{r}
 AnzahlTage.vec <- c(16,48,27,9)
 AnzahlEinsätze.vec <- c("[0,10]", "(10,20]", "(20,30]", "(30,80]")
 Service.df <- data.frame(Einsätze = AnzahlEinsätze.vec, Tage = AnzahlTage.vec)
-
-Service.df
 ```
 ```{r}
 RelHfk.vec <- Service.df$Tage / sum(Service.df$Tage)
 SumHfk.vec <- cumsum(RelHfk.vec)
 
 Service.df <- data.frame(Service.df, relHfk = RelHfk.vec, sumHfk = SumHfk.vec)
-
-Service.df
 ```
 ```{r}
 Service.df <- data.frame(Service.df, Klassenbreite=c(10,10,10,50), Klassenmitte=c(5,15,25,55))
-Service.df
 ```
 
 ```{r}
@@ -296,6 +304,8 @@ Service.df
 ```
 
 ##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.** 
+\
+\
 **Häufigkeitsverteilung**
 ```{r}
 barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
@@ -308,6 +318,7 @@ X2a4.vec <- c(0,10,20,30,80)
 hist(Service.vec, X2a4.vec, main = "Häufigkeitsverteilung (andere Darstellung)", xlab = "Anzahl Einsätze pro Tag", ylab = "Häufigkeitsdichte", col = "blue")
 barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
 ```
+\
 
 **Summenhäufigkeit**
 ```{r}
@@ -323,10 +334,15 @@ abline(0.5, 0, lty = "dashed", col = "red")
 
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
-__*Arithmetisches Mittel:*__ Das aritmethische Mittel wird auf 19 geschätzt. Links und rechts auf der x-Achse müssen gleich viele Werte liegen, da das arithmetische Mittel den Schwerpunkt der Verteilung symbolisiert.\
+\
+\
+__*Arithmetisches Mittel:*__ Das aritmethische Mittel wird auf 19 geschätzt. Links und rechts auf der x-Achse müssen gleich viele Werte liegen, da das arithmetische Mittel den Schwerpunkt der Verteilung symbolisiert.
+\
 __*Median:*__ Der Median kann an der y-Achse ablesen werden. Genauer gesagt an der Stelle, an der die 50% Marke bei der relativen Häufigkeit im Summenhäufigkeitsdiagramm liegt. In diesem Fall wird der Median auf 16 geschätzt. 
 
+
 ##### **c) Bestimme der Anteil der Tage mit über 20 Einsätzen.**
+\
 ```{r}
 Stress.vec <- Service.df$relHfk[3] + Service.df$relHfk[4]
 ```
@@ -335,8 +351,11 @@ Die Fragestellung verlangt nach der expliziten Angabe der Einsätze über 20 Ein
 
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Welcher Aspekt könnte hier problematisch sein? Warum?**
-__*Zentralmaße*__
-**Modus**
+\
+\
+**Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 getmode <- function(Service.vec) {
    uniqv <- unique(Service.vec)
@@ -344,46 +363,40 @@ getmode <- function(Service.vec) {
 }
 getmode(Service.vec)
 ```
-\
-**Median**
+__*Median*__
 ```{r}
 median(Service.vec)
 ```
-\
-**Mittelwert**
+__*Mittelwert*__
 ```{r}
 Mittelwert <- sum(Service.df$RelHfgk.vec * Service.df$Klassenmitte)
 
 Mittelwert
 ```
 \
-__*Streumaße*__\
-**Minimum**
+**Streumaße:**
+\
+__*Minimum*__
 ```{r}
 min(Service.vec)
 ```
-\
-**Maximum**
+__*Maximum*__
 ```{r}
 max(Service.vec)
 ```
-\
-**Spannweite**
+__*Spannweite*__
 ```{r}
 range(Service.vec)
 ```
-\
-**Quantile**
+__*Quantile*__
 ```{r}
 quantile(Service.vec)
 ```
-\
-**Standardabweichung**
+__*Standardabweichung*__
 ```{r}
 sd(Service.vec)
 ```
-\
-**Mittlere absolute Abweichung**
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Service.vec-mean(Service.vec)))
 ```
@@ -391,24 +404,31 @@ Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe 
 
 
 
-# **B)** VERSTÄNDNISFRAGEN
+# B) VERSTÄNDNISFRAGEN
 
-### **B-1)** Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
+## B-1) Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
+Bild
+\
+\
 
-
-### **B-2)** Verschiebungssatz zur Berechnung der Standardabweichung
+## B-2) Verschiebungssatz zur Berechnung der Standardabweichung
+\
 ![Herleitung des Verschiebungssatz](../Uebung1/B2.png)
 
-### **B-3)** Das komma-separierte File **"Fehlerquote.csv"** enthält das Prüfergebnis von 50 Bauteilen auf Funktionstüchtigkeit. Dabei steht der Eintrag **"0"** für ein fehlerfreies Bauteil und **"1"** für ein fehlerhaftes Bauteil.
+\
+\
+
+## **B-3)** Das komma-separierte File **"Fehlerquote.csv"** enthält das Prüfergebnis von 50 Bauteilen auf Funktionstüchtigkeit. Dabei steht der Eintrag **"0"** für ein fehlerfreies Bauteil und **"1"** für ein fehlerhaftes Bauteil.
 ```{r}
 Fehlerquote.df <- read.csv("Fehlerquote.csv", sep = ";", dec = ",", header = TRUE)
 ```
 
 ##### **a) Welche Skalierung hat dieses Merkmal?**
-Die Skalierung dieses Merkmals entspricht einem normalskalierten dichotomem Merkmal.
 \
+Die Skalierung dieses Merkmals entspricht einem normalskalierten dichotomem Merkmal.
 
 ##### **b) Stelle die Messergebnisse in einer Häufigkeitstabelle und grafisch dar.**
+\
 __*Häufigkeitstabelle:*__
 ```{r}
 Fehlerquote.vec <- table(Fehlerquote.df$fehlerhaft)/length(Fehlerquote.df$fehlerhaft)
@@ -427,28 +447,34 @@ barplot(Fehlerquote.vec, main = "Häufigkeitsverteilung", xlab = "Fehler (0 = ke
 ```
 
 ##### **c) Wie kann man in diesem Beispiel das arithmetische Mittel berechnen und wofür steht es in diesem Fall?**
+\
 Das arithmetische Mittel gibt hier nur an, wie viele Teile fehlerhaft sind, da die Bauteile mit 0, also fehlerfreie Bauteile, nicht miteinberechnet werden.
 
 ##### **d) Wie groß ist die Standardabweichung $\sigma$? Leite eine Formel her und zeige, wie man sie in diesem Fall einfach aus dem arithmetischen Mittel errechnen kann.**
-Standardabweigung:
+\
+__*Standardabweigung*__
 ```{r}
 sd(Fehlerquote.df$fehlerhaft)
 ```
-Standardabweichung über arithmetisches Mittel:
+__*Standardabweichung über arithmetisches Mittel*__
 ```{r}
 
 ```
 
 ##### **e) Wie müssen die Verteilungen in diesem Fall sein, damit die Streuung maximal bzw. minimal wird?**
+\
+Test
+\
+\
 
-
-### **B-4)** Das komma-separierte File **"Verteilungsvergleich.csv"** enthält in 4 Spalten die Daten von folgenden Messreihen: Ergebnis von 40 Würfeln mit einem Würfel (Annahme: gleichverteilt), die Zeitspanne (in Minuten) zwischen 40 vorbeifahrenden Autos (Annahme: exponentialverteilt), die Länge von 40 Telefongesprächen in Minuten (Annahme: normalverteilt) und die Länge von 40 Holzstiften in cm (Annahme: normalverteilt). Vergleiche die vier verschiedenen Verteilungen in den folgenden Fragen:
+## B-4) Das komma-separierte File **"Verteilungsvergleich.csv"** enthält in 4 Spalten die Daten von folgenden Messreihen: Ergebnis von 40 Würfeln mit einem Würfel (Annahme: gleichverteilt), die Zeitspanne (in Minuten) zwischen 40 vorbeifahrenden Autos (Annahme: exponentialverteilt), die Länge von 40 Telefongesprächen in Minuten (Annahme: normalverteilt) und die Länge von 40 Holzstiften in cm (Annahme: normalverteilt). Vergleiche die vier verschiedenen Verteilungen in den folgenden Fragen:
 ```{r}
 Verteilungsvergleich.df <- read.csv("Verteilungsvergleich.csv", sep = ";", dec = ",", header = TRUE)
 ```
 
 
 ##### **a) Erstelle für jede Messreihe eine Häufigkeitstabelle sowie eine grafische Darstellung der Häufigkeitsverteilung und der Summenhäufigkeit.**
+\
 __*Würfel*__
 ```{r}
 Würfel.df <- data.frame(Augenzahl = (1:6), abs.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel), rel.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel)/length(Verteilungsvergleich.df$Wuerfel))
@@ -549,15 +575,25 @@ abline(0.5, 0, lty = "dashed", col = "red")
 ```
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
+\
+\
 __*Würfel:*__\
 arithmetisches Mittel: 3,5\
-Median: 3\
-__*Wartezeit:*__\
+Median: 3
+\
+\
+__*Wartezeit:*__
+\
+\
 arithmetisches Mittel: liegt im Intervall [0,3] und beträgt geschätzt 3\
-Median: 2,8\
+Median: 2,8
+\
+\
 __*Telefongespräche:*__\
 arithmetisches Mittel: liegt im Intervall (2,4] und beträgt geschätzt 3\
-Median: 3,5\
+Median: 3,5
+\
+\
 __*Stiftlänge:*__\
 arithmetisches Mittel: liegt im Intervall (3.5,3.6] und beträgt geschätzt 3,55\
 Median: 3,51\
@@ -566,9 +602,11 @@ Median: 3,51\
 ##### **c) Bestimme für jede Messreihe jene Merkmalsausprägung, unter welcher die kleinsten 25 % zu finden sind.**
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Versuche die Lage und die Größe der Lageparameter aufgrund der Eigenschaften der Verteilungen zu verstehen. (z.B.: Worauf deutet die verschiedenen Lage von Median und arithmetischem Mittel, wie verhält sich die Standardabweichung zu Streuparametern wie Spannweite oder Interquartilsabstand?)**
-**Würfel:**\
-__*Zentralmaße*__\
-Modus:
+\
+\
+**Würfel - Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 Modus_Wuerfel.vec <- Verteilungsvergleich.df$Wuerfel
 getmode <- function(Modus_Wuerfel.vec) {
@@ -577,51 +615,46 @@ getmode <- function(Modus_Wuerfel.vec) {
 }
 getmode(Modus_Wuerfel.vec)
 ```
-\
-Median:
+__*Median*__
 ```{r}
 median(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Mittelwert:
+__*Mittelwert*__
 ```{r}
 mean(Verteilungsvergleich.df$Wuerfel)
 ```
 \
-__*Streumaße*__\
-Minimum:
+**Würfel - Streumaße**
+\
+__*Minimum*__
 ```{r}
 min(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Maximum:
+__*Maximum*__
 ```{r}
 max(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Spannweite:
+__*Spannweite*__
 ```{r}
 range(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Quantile:
+__*Quantile*__
 ```{r}
 quantile(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Standardabweichung:
+__*Standardabweichung*__
 ```{r}
 sd(Verteilungsvergleich.df$Wuerfel)
 ```
-\
-Mittlere absolute Abweichung:
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Verteilungsvergleich.df$Wuerfel-mean(Verteilungsvergleich.df$Wuerfel)))
 ```
 \
-**Wartezeit**\
-__*Zentralmaße*__\
-Modus:
+\
+**Wartezeit - Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 Modus_Wartezeit.vec <- Verteilungsvergleich.df$Wartezeit_min
 getmode <- function(Modus_Wartezeit.vec) {
@@ -630,50 +663,46 @@ getmode <- function(Modus_Wartezeit.vec) {
 }
 getmode(Modus_Wartezeit.vec)
 ```
-\
-Median:
+__*Median*__
 ```{r}
 median(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Mittelwert:
+__*Mittelwert*__
 ```{r}
 mean(Verteilungsvergleich.df$Wartezeit_min)
 ```
-__*Streumaße*__\
-Minimum:
+\
+**Wartezeit - Streumaße**
+\
+__*Minimum*__
 ```{r}
 min(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Maximum:
+__*Maximum*__
 ```{r}
 max(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Spannweite:
+__*Spannweite*__
 ```{r}
 range(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Quantile:
+__*Quantile*__
 ```{r}
 quantile(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Standardabweichung:
+__*Standardabweichung*__
 ```{r}
 sd(Verteilungsvergleich.df$Wartezeit_min)
 ```
-\
-Mittlere absolute Abweichung:
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Verteilungsvergleich.df$Wartezeit_min-mean(Verteilungsvergleich.df$Wartezeit_min)))
 ```
-
-**Telefongespräch**\
-__*Zentralmaße*__\
-Modus:
+\
+\
+**Telefongespräch - Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 Modus_Telefongespräch.vec <- Verteilungsvergleich.df$Telgesprae_min
 getmode <- function(Modus_Telefongespräch.vec) {
@@ -682,50 +711,46 @@ getmode <- function(Modus_Telefongespräch.vec) {
 }
 getmode(Modus_Telefongespräch.vec)
 ```
-\
-Median:
+__*Median*__
 ```{r}
 median(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Mittelwert:
+__*Mittelwert*__
 ```{r}
 mean(Verteilungsvergleich.df$Telgesprae_min)
 ```
-__*Streumaße*__\
-Minimum:
+\
+**Telefongespräche - Streumaße:**
+\
+__*Minimum*__
 ```{r}
 min(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Maximum:
+__*Maximum*__
 ```{r}
 max(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Spannweite:
+__*Spannweite*__
 ```{r}
 range(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Quantile:
+__*Quantile*__
 ```{r}
 quantile(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Standardabweichung:
+__*Standardabweichung*__
 ```{r}
 sd(Verteilungsvergleich.df$Telgesprae_min)
 ```
-\
-Mittlere absolute Abweichung:
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Verteilungsvergleich.df$Telgesprae_min-mean(Verteilungsvergleich.df$Telgesprae_min)))
 ```
-
-**Stiftlänge**\
-__*Zentralmaße*__\
-Modus:
+\
+\
+**Stiftlänge - Zentralmaße:**
+\
+__*Modus*__
 ```{r}
 Modus_Stiftlänge.vec <- Verteilungsvergleich.df$Stiftlaenge_cm
 getmode <- function(Modus_Stiftlänge.vec) {
@@ -734,48 +759,45 @@ getmode <- function(Modus_Stiftlänge.vec) {
 }
 getmode(Modus_Stiftlänge.vec)
 ```
-\
-Median:
+__*Median*__
 ```{r}
 median(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Mittelwert:
+__*Mittelwert*__
 ```{r}
 mean(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-__*Streumaße*__\
-Minimum:
+\
+**Stiftlänge - Streumaße:**
+\
+__*Minimum*__
 ```{r}
 min(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Maximum:
+__*Maximum*__
 ```{r}
 max(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Spannweite:
+__*Spannweite*__
 ```{r}
 range(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Quantile:
+__*Quantile*__
 ```{r}
 quantile(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Standardabweichung:
+__*Standardabweichung*__
 ```{r}
 sd(Verteilungsvergleich.df$Stiftlaenge_cm)
 ```
-\
-Mittlere absolute Abweichung:
+__*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Verteilungsvergleich.df$Stiftlaenge_cm-mean(Verteilungsvergleich.df$Stiftlaenge_cm)))
 ```
+\
 
 ##### **e) Zeichne für jede Messreihe einen Boxplot**
+\
 ```{r}
 boxplot(Verteilungsvergleich.df$Wuerfel, col = "blue", main = "Würfel", ylab = "Augenzahl")
 ```
@@ -790,27 +812,34 @@ boxplot(Verteilungsvergleich.df$Stiftlaenge_cm, main = "Stiftlänge", ylab = "St
 ```
 
 
-### **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
+## **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
 Wie sich aus der Statistik ableiten lässt, ist laut Fluggesellschaft das Fliegen rund 10 Mal sicherer als eine Autofahrt. Gleichzeitig wird aber auch angegeben, dass ein Flugzeug im Durchschnitt auch 10 Mal so schnell fliegt, als ein Auto fährt. Innerhalb eines gleichen Zeitabschnitts legt ein Flugzeug 48 Mio. Kilometer zurück, ein Auto hingegen nur 4,8 Mio Kilometer. Aus der Angabe geht hervor, dass für beide Strecken jeweils ein Todesopfer zu beklagen ist. Das Sterberisiko ist zwar pro Kilometer Flugstrecke geringer als pro Kilometer Autofahrt, Für eine bestimmte Reisezeit ist das Risiko zu Sterben allerdings gleich groß. Die Pro-Auto-Initiative könnte also angeben, dass pro Reisestunde das Sterberisiko bei einer Autofahrt gleich groß ist wie bei der Reise mit einem Flugzeug. 
+\
+\
 
 
-### **B-6)** Will Rogers Phänomen. 
+## **B-6)** Will Rogers Phänomen. 
+Text
+\
+\
 
 
-
-### **B-7)** Simpsons Paradoxon.
-
-
-
-### **B-8)** Studienplatz an einer Hochschule
+## **B-7)** Simpsons Paradoxon.
+Text
+\
+\
 
 
-### **C-1)** Offene Untersuchung: Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
+## **B-8)** Studienplatz an einer Hochschule
+Text 
+\
+\
+
+## **C-1)** Offene Untersuchung: Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
 \
 **Verteilung der Unternehmen nach den Branchen**
 ```{r}
 Unternehmensumsätze.df <- read.csv("Unternehmensumsaetze.csv", sep = ";", dec = ",", header = TRUE)
-Unternehmensumsätze.df
 ```
 \
 **Verteilung der Unternehmen nach den jeweiligen Länder in dem das Unternehmen seinen Hauptwohnsitz hat**
@@ -820,6 +849,7 @@ names(Land.df) <- c("Staat" , "Anzahl")
 Land.df[order(Land.df$Anzahl, decreasing = TRUE),]
 ```
 \
+\
 **Verteilung der Unternehmen nach Branchen**
 ```{r}
 Branche.df <- data.frame(table(Unternehmensumsätze.df$Branche))
@@ -827,12 +857,14 @@ names(Branche.df) <- c("Branche", "Anzahl")
 Branche.df[order(Branche.df$Anzahl, decreasing = TRUE),]
 ```
 \
+\
 **Verteilung der Unternehmen nach Hauptsitz**
 ```{r}
 Hauptsitz.df <- data.frame(table(Unternehmensumsätze.df$Hauptsitz)) 
 names(Hauptsitz.df) <- c("Hauptsitz" , "Anzahl") 
 Hauptsitz.df[order(Hauptsitz.df$Anzahl, decreasing = TRUE),]
 ```
+\
 \
 **Aufteilung nach Unternehmensumsätze**
 ```{r}
@@ -843,6 +875,7 @@ summary(Unternehmensumsätze.df$Umsatz)
 hist(Unternehmensumsätze.df$Umsatz, c(0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500), col = "blue", main = "Histogramm der Unternehmensumsätze", xlab = "Umsatz in Mrd. $", ylab = "Anzahl der Unternehmen", ylim = c(0,40))
 ```
 \
+\
 **Aufteilung nach Unternehmensgewinnen**
 ```{r}
 summary(Unternehmensumsätze.df$Gewinn)
@@ -852,6 +885,7 @@ Breaks.vec <- c(-20,-10,0,10,20,30,40,50,60,70,80,90)
 
 hist(Unternehmensumsätze.df$Gewinn, Breaks.vec, main = "Histogramm der Unternehmensgewinne", xlab = "Gewinn in Mrd. $", ylab = "Anzahl der Unternehmen", col = "blue", xlim = c(-20,100))
 ```
+\
 \
 **Sortierung nach Umsatz je Mitarbeiter in $**
 ```{r}
@@ -867,6 +901,7 @@ Umsatz_Mitarbeit_Bran.df[order(Umsatz_Mitarbeit_Bran.df$Umsatz_je_Mitarbeiter, d
 Im Rohstoffsektor und im Pharmaunternehmen sind die vergleichsweise größten Gewinne je Mitarbeiter zu erzielen. Im Rohstoffhandel betragen die Umsätze rund 4,6 Mio. \$ je Mitarbeiter.
 
 \
+\
 **Sortierung nach Gewinn je Mitarbeiter nach Branche in $**
 ```{r}
 Gewinn_Bran.vec <- aggregate(Unternehmensumsätze.df$Gewinn, by = list(Branche = Unternehmensumsätze.df$Branche), FUN = sum)
@@ -877,6 +912,7 @@ names(Gewinn_Mitarbeit_Bran.df) <- c("Branche", "Gewinn_je_Mitarbeiter")
 Gewinn_Mitarbeit_Bran.df[order(Gewinn_Mitarbeit_Bran.df$Gewinn_je_Mitarbeiter, decreasing = TRUE),]
 ```
 Die höchsten Gewinne je Mitarbeiter können mit rund 570.00 \$ je Mitarbeiter die Unternehmen in der Pharmazie aufweisen. 
+\
 \
 **Sortierung nach Gewinn je Mitarbeiter nach Unternehmen in $**
 ```{r}
@@ -890,6 +926,7 @@ names(Gewinn_Mitarbeit_Firma.df) <- c("Firma", "Gewinn_je_Mitarbeiter")
 Gewinn_Mitarbeit_Firma.df[order(Gewinn_Mitarbeit_Firma.df$Gewinn_je_Mitarbeiter, decreasing = TRUE),]
 ```
 \
+\
 **Regressionsgerade durch die Merkmale "Mitarbeiter" und "Gewinn"**
 ```{r}
 plot(Unternehmensumsätze.df$Mitarbeiter/1000000, Unternehmensumsätze.df$Gewinn, main = "Regression Mitarbeiter/Gewinn", xlab = "Mitarbeiter in Mio.", ylab = "Gewinn")
@@ -899,12 +936,12 @@ abline(lm(Unternehmensumsätze.df$Gewinn~Unternehmensumsätze.df$Mitarbeiter), c
 Den größten Ausreißer, also das Unternehmen, das den größten Gewinn je Mitarbeiter erzielt, gibt es bei der Firma Fanni Mae mit fast 12 Mrd. \$ Gewinn je Mitarbeiter. Berechnet wird dieser Ausreißer in der vorherigen Berechnung bei "Sortierung nach Gewinn je Mitarbeiter nach Unternehmen in \$"
 
 \
+\
 **Lorenzkurve angewandt auf die Merkmale "Umsätze" und "Mitarbeiter"**
 ```{r}
 "ineq" %in% installed.packages()
 #install.packages("ineq")
 library(ineq)
 
-par(pty = "s")
 plot(Lc(Unternehmensumsätze.df$Mitarbeiter, Unternehmensumsätze.df$Umsatz), main = "Umsätze je Mitarbeiter", xlab = "Mitarbeiter", ylab = "Umsätze")
 ```
