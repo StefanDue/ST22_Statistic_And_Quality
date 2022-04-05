@@ -30,7 +30,7 @@ Liste.vec
 
 ##### **a) Was stellt bei dieser Fragestellung die statistische Grundgesamtheit dar? Was sind die beobachteten Merkmale der statistischen Einheiten und wie sind sie skaliert?**
 * Grundgesamtheit
-  * Die Grundgesamtheit setzt sich auch sen statistischen Einheiten zusammen. Die Grundgesamtheit sind die Anzahl der 10-Minuten-Zeitintervalle - (`r length(Liste.vec)`).
+  * Die Grundgesamtheit setzt sich aus den statistischen Einheiten zusammen. Die Grundgesamtheit sind die Anzahl der 10-Minuten-Zeitintervalle - (`r length(Liste.vec)`).
 * Merkmale
   * Anzahl der 10-Minuten-Zeitintervalle (`r length(Liste.vec)`)
   * Anzahl der Anrufe über alle Zeitintervalle (`r sum(Liste.vec)`)
@@ -45,7 +45,7 @@ table(Liste.vec)
 ```
 
 ```{r}
-barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten_Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col = "blue")
+barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten-Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col = "blue")
 ```
 \
 **Relative Häufigkeit:**
@@ -57,15 +57,32 @@ table(Liste.vec)/length(Liste.vec)
 barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6)))/sum(table(Liste.vec)), ylim = c(0,0.4), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls",ylab = "relative Häufigkeit", main = "Relative Häufigkeitsverteilung", col = "blue")
 ```
 \
+\
+\
 **Summenhäufigkeit**
 ```{r}
 cumsum(table(Liste.vec))
 ```
 ```{r}
-barplot(cumsum(table(factor(Liste.vec,levels = c(0,1,2,3,4,5,6))))/sum(table(Liste.vec)), ylim = c(0,1.2), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Relative Summenhäufigkeit", main = "Summenhäufigkeit", col = "blue")
+barplot(cumsum(table(factor(Liste.vec,levels = c(0,1,2,3,4,5,6))))/sum(table(Liste.vec)), xlab = "Anzahl der Anrufe innerhalb des Intervalls", ylab = "Summenhäufigkeit", main = "rel. Häufigkeit", col = "blue")
 abline(0.25, 0, lty = "dashed")
 abline(0.5, 0, lty = "dashed", col = "red")
 abline(0.75, 0, lty = "dashed")
+```
+\
+\
+\
+__*Andere Darstellung der Summenhäufigkeit*__
+```{r}
+Breaks.vec <- c(0:6)
+SummHfk.vec <- cumsum(table(Liste.vec))/sum(table(Liste.vec))
+
+plot(Breaks.vec, c(0,SummHfk.vec), main = "Summenhäufigkeit", xlab = "Anzahl der Anrufe innerhalb eines Zeitintervalls", ylab = "rel. Häufigkeit", type = "l", lty = 1)
+points(Breaks.vec, c(0,SummHfk.vec))
+lines(Breaks.vec, c(0,SummHfk.vec), type = "s", lty = 3)
+abline(0.25, 0, lty = "dashed")
+abline(0.75, 0, lty = "dashed")
+abline(0.5, 0, lty = "dashed", col = "red")
 ```
 
 ##### **c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
@@ -87,6 +104,10 @@ getmode <- function(Liste.vec) {
 mode <- getmode(Liste.vec)
 mode
 ```
+\
+\
+\
+\
 __*Median*__
 ```{r}
 median(Liste.vec)
@@ -122,10 +143,16 @@ __*Mittlere absolute Abweichung*__
 ```{r}
 mean(abs(Liste.vec-mean(Liste.vec)))
 ```
+\
+\
+\
+\
 __*Standardabweichung*__
 ```{r}
 sd(Liste.vec)
 ```
+\
+
 ##### **e) Stelle die Daten in einem Boxplot dar**
 \
 ```{r}
@@ -149,14 +176,14 @@ Lebensdauer.df <- data.frame(Lebensdauer=Klassen.vec, Anzahl_Motoren=Anzahl.vec)
 Lebensdauer.df
 ```
 \
-Ergänzung der vorgegebenen Liste um die Klassenbreite und die Klassenmitte
+__*Ergänzung der vorgegebenen Liste um die Klassenbreite und die Klassenmitte*__
 ```{r}
 Lebensdauer.df <- data.frame(Lebensdauer=Lebensdauer.df$Lebensdauer, Klassenmitte=c(1,3,5,7,9), Klassenbreite=rep(2,5), Anzahl_Motoren=Lebensdauer.df$Anzahl_Motoren)
 
 Lebensdauer.df
 ```
 \
-Ergänzung der Tabelle um die relative Häufigkeitsverteilung und die Summenhäufigkeit
+__*Ergänzung der Tabelle um die relative Häufigkeitsverteilung und die Summenhäufigkeit*__
 ```{r}
 RelHfgk.vec <- Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren)
 
@@ -167,7 +194,7 @@ Lebensdauer.df <- data.frame(Lebensdauer.df, RelHfgk.vec, SumHfgk.vec)
 Lebensdauer.df
 ```
 
-Ergänzung der Tabelle um die Häufigkeitsdichte
+__*Ergänzung der Tabelle um die Häufigkeitsdichte*__
 ```{r}
 HfgkDichte.vec <- Lebensdauer.df$RelHfgk.vec / Lebensdauer.df$Klassenbreite
   
@@ -177,6 +204,7 @@ Lebensdauer.df
 ```
 
 ##### **a) Stelle die Häufigkeitsverteilung und Summenhäufigkeit grafisch dar.**
+\
 \
 **Absolute Häufigkeitsverteilung**
 ```{r}
@@ -202,9 +230,11 @@ abline(0.75, 0, lty = "dashed")
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 \
-__*Arithmetisches Mittel - geschätzt:*__ Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.
+__*Arithmetisches Mittel - geschätzt:*__ \
+Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.
 \
-__*Median:*__ Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgelesen werden. Der Median beträgt schätzungsweise bei 4.
+__*Median:*__\
+Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgelesen werden. Der Median beträgt schätzungsweise bei 5.
 
 
 ##### **c) Bestimme der Anteil der Motoren mit über 6 Jahren Lebensdauer.**
@@ -214,11 +244,13 @@ LangeLebensdauer.vec <- Lebensdauer.df$Anzahl_Motoren[4] + Lebensdauer.df$Anzahl
 
 LangeLebensdauer.vec
 ```
-Motoren mit Lebensdauern über 6 Jahren befinden sich in der Liste in den letzten beiden statistischen Einheiten. Über die [] kann auf spezielle Vektorelemente/Listenelemente zugegriffen werden. In diesem Fall wird auf die Listenelemente 4 und 5 zugegriffen und für die Anzahl der Motoren, die länger als 6 Jahre laufen, addiert. Somit laufen `r LangeLebensdauer.vec` Motoren länger als 6 Jahre.
+Motoren mit einer Lebensdauer über 6 Jahren befinden sich in der Liste in den letzten beiden statistischen Einheiten. Über die [] kann auf spezielle Vektorelemente/Listenelemente zugegriffen werden. In diesem Fall wird auf die Listenelemente 4 und 5 zugegriffen und für die Anzahl der Motoren, die länger als 6 Jahre laufen, addiert. Somit laufen `r LangeLebensdauer.vec` Motoren länger als 6 Jahre.
+\
+\
 \
 **Lebensdauer von Motoren**
 ```{r}
-barplot(Lebensdauer.df$Dichte, names=Lebensdauer.df$Lebensdauer, main = "Lebensdauer von Motoren", xlab = "Lebensdauer in Jahre", ylab = "Häufigkeitsdichte", ylim = c(0,0.3), space = 0, col = "blue")
+barplot(Lebensdauer.df$Dichte, names=Lebensdauer.df$Lebensdauer, main = "Lebensdauer von Motoren", xlab = "Lebensdauer in Jahre", ylab = "Häufigkeitsdichte", ylim = c(0,0.25), space = 0, col = "blue")
 ```
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße).**
@@ -235,8 +267,13 @@ getmode <- function(Lebensdauer.vec) {
    uniqv <- unique(Lebensdauer.vec)
    uniqv[which.max(tabulate(match(Lebensdauer.vec, uniqv)))]
 }
-getmode(Lebensdauer.vec)
+Modus <- getmode(Lebensdauer.vec)
+Modus
 ```
+Der Modus wird hier duch die Zahl `r Modus` repräsentiert. Da diese Zahl innerhalb eines Intervalls liegt, beträgt der Modus (4,6].
+\
+\
+\
 __*Median*__
 ```{r}
 median(Lebensdauer.vec)
@@ -266,6 +303,12 @@ __*Quantile*__
 ```{r}
 quantile(Lebensdauer.vec)
 ```
+\
+\
+\
+\
+\
+\
 __*Standardabweichung*__
 ```{r}
 sd(Lebensdauer.vec)
@@ -311,12 +354,12 @@ Service.df
 barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
 ```
 \
-Die oben dargestellte Häufigkeitsverteilung bildet die statistischen Einheiten in einheitlichen Klassenbreiten ab. Die Darstellung lässt den Trugschluss zu, dass die letzte statistische Einheit die gleiche Breite wie die anderen Klassen aufweist. Im gegensatz zu den anderen Einheiten ist die letzte statistische Einheit nicht 10 sondern 50 Einsätzte pro Tag breit. In der nachfolgenden Darstellung werden die Intervalle ignoriert und die absolute Anzahl der Einsätze pro Tag angezeigt. Diese Darstellung kann einfacher verständlich und besser anschaulich zeigen, mit welcher Häufigkeit Anrufe pro Tag auftreten.
+Die oben dargestellte Häufigkeitsverteilung bildet die statistischen Einheiten in einheitlichen Klassenbreiten ab. Die Darstellung lässt den Trugschluss zu, dass die letzte statistische Einheit die gleiche Breite wie die anderen Klassen aufweist. Im Gegensatz zu den anderen Einheiten ist die letzte statistische Einheit nicht 10 sondern 50 Einsätzte pro Tag breit. In diesem Fall entspricht die Darstellung nicht einer Häufigkeitsdichteverteilung, was auch bedeutet, dass die y-Achse nicht richtig beschriftet ist.\
+In der nachfolgenden Darstellung werden die Intervalle ignoriert und die absolute Anzahl der Einsätze pro Tag angezeigt. Diese Darstellung kann einfacher verständlich und besser anschaulich zeigen, mit welcher Häufigkeit Anrufe pro Tag auftreten. Die Darstellung enstpricht auch der Häufigkeitdichtefunktion. 
 ```{r}
 Service.vec <- c(rep(5,16), rep(15,48), rep(25,27), rep(55,9))
 X2a4.vec <- c(0,10,20,30,80)
-hist(Service.vec, X2a4.vec, main = "Häufigkeitsverteilung (andere Darstellung)", xlab = "Anzahl Einsätze pro Tag", ylab = "Häufigkeitsdichte", col = "blue")
-barplot(Service.df$Dichte, names=Service.df$Einsätze, col = "blue", main = "Häufigkeitsverteilung", xlab = "Anzahl Einsätze pro Tage", ylab = "Häufigkeitsdichte", space = 0, ylim = c(0,0.06))
+hist(Service.vec, X2a4.vec, main = "Häufigkeitsverteilung (andere Darstellung)", xlab = "Anzahl Einsätze pro Tag", ylab = "Häufigkeitsdichte", col = "blue", ylim = c(0,0.06))
 ```
 \
 
@@ -409,6 +452,8 @@ Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe 
 ## B-1) Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
 Bild
 \
+![Arithmetisches Mittel liegt unter dem Schwerpunkt der Häufigkeitsfunktion](../Uebung1/B1.png)
+\
 \
 
 ## B-2) Verschiebungssatz zur Berechnung der Standardabweichung
@@ -456,14 +501,21 @@ __*Standardabweigung*__
 ```{r}
 sd(Fehlerquote.df$fehlerhaft)
 ```
+\
+![Herleitung des Verschiebungssatzes](../Uebung1/B3d.png)
+\
 __*Standardabweichung über arithmetisches Mittel*__
 ```{r}
+Varianz.vec <- sum((Fehlerquote.df$fehlerhaft - mean(Fehlerquote.df$fehlerhaft))^2/length(Fehlerquote.df$fehlerhaft))
 
+Standardabweichung.vec <- sqrt(Varianz.vec)
+Standardabweichung.vec
 ```
 
 ##### **e) Wie müssen die Verteilungen in diesem Fall sein, damit die Streuung maximal bzw. minimal wird?**
 \
-Test
+*Die Streuung ist maximal, wenn gleich viele Teile fehlerhaft sind wie Teile fehlerfrei. Die Verteilung müsste also 50% fehlerhaft zu 50 % fehlerfrei sein. Dann ist die Streuung 0.
+*Die Streuung ist minimal, wenn kein Teil fehlerhaft ist bzw. wenn alle Teile fehlerhaft sind. 
 \
 \
 
@@ -600,6 +652,27 @@ Median: 3,51\
 
 
 ##### **c) Bestimme für jede Messreihe jene Merkmalsausprägung, unter welcher die kleinsten 25 % zu finden sind.**
+\
+__*Würfel*__
+```{r}
+quantile(Verteilungsvergleich.df$Wuerfel, probs = c(0,0.25))
+```
+\
+__*Wartezeit*__
+```{r}
+quantile(Verteilungsvergleich.df$Wartezeit_min, probs = c(0,0.25))
+```
+\
+__*Telefongespräche*__
+```{r}
+quantile(Verteilungsvergleich.df$Telgesprae_min, probs = c(0,0.25))
+```
+\
+__*Stiftlänge*__
+```{r}
+quantile(Verteilungsvergleich.df$Stiftlaenge_cm, probs = c(0,0.25))
+```
+
 
 ##### **d) Berechne die möglichen Lageparameter (Zentralmaße und Streumaße). Versuche die Lage und die Größe der Lageparameter aufgrund der Eigenschaften der Verteilungen zu verstehen. (z.B.: Worauf deutet die verschiedenen Lage von Median und arithmetischem Mittel, wie verhält sich die Standardabweichung zu Streuparametern wie Spannweite oder Interquartilsabstand?)**
 \
@@ -825,8 +898,10 @@ Text
 
 
 ## **B-7)** Simpsons Paradoxon.
-Text
-\
+Beim Simpson Paradoxon wird offensichtlich, dass Ergebnisse von Studien, je nach dem wie sie aufbereitet werden, völlig unterschiedliche Ergebnisse liefern, auch wenn die beiden Verfahren korrekt sind und an den Daten keine Manipulation vorgenommen wurde. So ist in diesem Beispiel ersichtlich, dass die Ergebnisse des Versuchs mit dem neuen Fertigungsverfahren einzeln betrachtet deutlich schlechter abschneidet, als bei gemeinsamer Betrachtung.\
+So werden bei den zusammengefassten Ergebnissen einzelne Teile und Einzelheiten des Produktionsablaufs und Gründe für das schlechtere Abschneiden des neuen Verfahrens nicht mit berücksichtigt. Die Daten über die Durchführung bei der Studie zum neuen Produktionsverfahren werden beim Zusammenfassen also unter den Tisch fallen gelassen.\
+Ein möglicher Grund für das schlechtere Abschneiden des neuen Fertigungsprozesses könnte in diesem Beispiel sein, dass die Ausschüsse nicht gleichverteilt waren, sondern am Anfang aufgrund der Umstellung viel höher ausfielen. Aus den vorliegenden Daten kann allerdings kein Rückschluss auf diese Behauptung gezogen werden. Ein weiterer Grund könnte sein, dass die Unterschiede in den beiden Werken darauf zurückgefürht werden könne, dass in den Unterschiedlichen Produktionsstätten unterschiedliche Maschinen zum Einsatz kommen. Ältere Maschinen in einem der Werke könnte z.B. dazu führen, dass der Ausschuss größer ist, da sie mit dem neuen Fertigungsverfahren nicht so gut arbeiten können.\
+Zusammengefasst beschreibt das Simpson Paradoxon, dass Studienergebnisse oftmals durch "für die Studienautoren günstige Auslegung" so präsentiert werden könne, dass das Ergebnis ein anderes ist, als würde man die einzelnen Studien für sich betrachten.
 \
 
 
@@ -835,7 +910,8 @@ Text
 \
 \
 
-## **C-1)** Offene Untersuchung: Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
+# C) Offene Untersuchung
+## **C-1)** Das komma-separierte File „Unternehmensumsaetze.csv“ enthält Daten zu den 97 weltweit größten und börsennotierten Konzernen. In dieser Tabelle sind die Umsätze und Gewinne in Mrd. $ angegeben. Untersuche die Daten mit den bekannten Methoden. Beantworte damit Fragen, wie z.B.: \ „Wie verteilen sich die Unternehmen auf Länder und Branchen?“, \ „Wie verteilen sich Gewinne, Umsätze und Mitarbeiter?“, \ „Welche Branchen generieren besonders viele Umsätze oder Gewinne pro Mitarbeiter?“, und andere mehr. Verwende dazu geeignete Häufigkeitsdarstellungen und Lageparameter.\ Lege eine passende Regressionsgerade durch die Merkmale „Mitarbeiter“ und „Gewinn“. Wo gibt es Ausreißer. Erkundige Dich nach der Lorenzkurve und wende sie auf die Werte der Merkmale „Umsätze“ und „Mitarbeiter“ an.
 \
 **Verteilung der Unternehmen nach den Branchen**
 ```{r}
