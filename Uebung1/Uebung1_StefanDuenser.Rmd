@@ -892,7 +892,8 @@ Wie sich aus der Statistik ableiten lässt, ist laut Fluggesellschaft das Fliege
 
 
 ## **B-6)** Will Rogers Phänomen. 
-Text
+Das Will Rogers Phänomen beschreibt eine Gegebenheit, bei der durch geschicktes Verschieben von Elementen zwischen Gruppen der Mittelwert in beiden Gruppen verändert werden kann. Je nach Ausgangssituation kann dabei der Mittelwert in beiden Gruppen gesteigert oder wenn gewünscht auch verringert werden. \
+Die bei dieser Untersuchtung erhobenen Daten sind alle korrekt. Durch das Zusammenlegen der Senioren und der Kinder ergeben sich für den Hersteller allerding bessere Lebensdauerergebnisse. Aufgrund der unterschiedlichen Lebenserwartung von Kindern und Jugendlichen dürfen diese nicht in derselben Gruppe ausgewertet werden. 
 \
 \
 
@@ -906,7 +907,7 @@ Zusammengefasst beschreibt das Simpson Paradoxon, dass Studienergebnisse oftmals
 
 
 ## **B-8)** Studienplatz an einer Hochschule
-Text 
+Bei dieser Untersuchtung kommt wieder das Simpson Paradoxon zum Einsatz. Betrachtet man die Zahlen der ersten Tabelle genauer, erkennt man, dass sich deutlich mehr Studenten für einen Studienplatz an der Hochschule beworben haben als Studentinnnen. Diese Tatsache wirkt sich schlussendlich netagiv auf das Gesamtergebnis aus. In diesem Studiengang werden jeweil 10 Bewerberinnen und Bewerber aufgenommen. Die Erfolgsquote liegt bei den Bewerberinnen höher, da sich Absolut betrachtet mehr Bewerber für diesen Studienplatz gefunden haben. Auch muss berücksichtigt werden, dass der Studiengang STG-4 mit abstand am meisten Bewerberinnen und Bewerber hat, in diesem Studiengang allerdings die wenigsten Studienplätze vergeben werden. Schlüsselt man die Daten für diesen Studiengang genauer auf, wird deutlich, dass knapp 74 % aller Studentinnen sich für diesen Studiengang beworben haben. Bei den Bewerbern liegt dieser Anteil nur bei nicht einmal 53 %. Da dieser Unterschied bei der Gesamtbetrachtung vernachlässigt wird, hat es den Anschein, dass Bewerberinnen die schlechteren Chancen haben, einen Studienplatz an dieser Hochschule zu bekommen als Bewerber. Betrachtet man jedoch alle Einflussfaktoren, wie es die QM der Hochschule durch die Aufschlüsselung der Erfolgsquote auf die einzelnen Studiengäng gemacht hat, kommt man zu dem Ergebnis, dass die Chancen von Bewerberinnen höher ist als jene von Bewerbern. 
 \
 \
 
