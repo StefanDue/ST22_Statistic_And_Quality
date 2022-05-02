@@ -1,0 +1,176 @@
+---
+title: "Statistik und Qualität - Ausarbeitung der ersten Übung"
+author: "Stefan Dünser"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
+---
+#### 1) Simuliere die Folge von 100 Münzwürfen mit dem Computer. Wir gehen dabei von einer „fairen“ Münze aus, d.h. von einer Münze, die nach einem Wurf zu je 50 % „Kopf“ oder „Zahl“ zeigt. Erzeuge dazu ein Feld (einen Vektor) mit 100 Komponenten, in den mit je 50 % Wahrscheinlichkeit „0“ („Kopf“) oder „1“ („Zahl“) eingetragen werden. Betrachte die entstehenden Muster. Wie oft treten 3 oder mehrere gleiche Ergebnisse in Serie auf? Wie (statistisch) bedeutsam sind diese Häufungen von Ereignissen?
+```{r}
+N <- 100
+Muenzwurf.vec <- floor(runif(N) * 2)
+Muenzwurf.vec
+# Speichern des zufälligen Ausgangsvektors für die Feststellung der Nuller-Serien
+Muenzwurf0.vec <- Muenzwurf.vec
+```
+```{r}
+n <- 12
+```
+
+Im folgenden wird angenommen, dass eine Serie aus maximal `r n` Elementen bestehen kann. 
+```{r}
+Serie.df <- data.frame(Seriengröße = c(1:n), Anzahl_Zahl = rep(0,n), Anzahl_Kopf = rep(0,n))
+N1 <- sum(Muenzwurf.vec)
+Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
+N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
+Serie.df$Anzahl_Zahl[1] <- N1-N2
+
+i <- 2
+while (i <= n) {
+  Muenzwurf.vec <- Muenzwurf1.vec
+  N1 <- sum(Muenzwurf.vec)
+  Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
+  N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
+  Serie.df$Anzahl_Zahl[i] <- N1-N2
+  i <- i + 1
+}
+
+Serie.df
+```
+```{r}
+Muenzwurf.vec <- (Muenzwurf0.vec == 0) * 1
+
+N1 <- sum(Muenzwurf.vec)
+Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
+N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
+Serie.df$Anzahl_Kopf[1] <- N1-N2
+
+i <- 2
+while (i <= n) {
+  Muenzwurf.vec <- Muenzwurf1.vec
+  N1 <- sum(Muenzwurf.vec)
+  Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
+  N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
+  Serie.df$Anzahl_Kopf[i] <- N1-N2
+  i <- i + 1
+}
+
+Serie.df
+```
+```{r}
+i <- 3
+Zahl <- 0
+Kopf <- 0
+SerieGroesserGleich3_1 <- 0
+SerieGroesserGleich3_0 <- 0
+
+while (i <= n) {
+  Zahl <- Serie.df$Anzahl_Zahl[i]
+  Kopf <- Serie.df$Anzahl_Kopf[i]
+  SerieGroesserGleich3_1 <- SerieGroesserGleich3_1 + Zahl
+  SerieGroesserGleich3_0 <- SerieGroesserGleich3_0 + Kopf
+  i <- i + 1
+}
+SerieGroesserGleich3_1
+SerieGroesserGleich3_0
+
+SerieGroesserGleich3 <- SerieGroesserGleich3_0 + SerieGroesserGleich3_1
+SerieGroesserGleich3
+
+```
+Die Auswertung der Zufallsdaten hat ergeben, dass es bei den zufälligen Münzwürfen mit identischer Wahrscheinlichkeit insgesamt `r SerieGroesserGleich3` Serien gibt, die 3 oder mehr Elemente enthält. Dabei entfallen `r SerieGroesserGleich3_1` Serien, bei denen der Münzwurf das Ergenbins "Zahl" und `r SerieGroesserGleich3_0` bei denen der Münzwurf das Ergebnis "Kopf" ist.  
+\
+**Statistische Bedeutsamkeit**\
+Die Wahrscheinlichkeit, dass beim Münzwurf mit einer fairen Münze dasselbe Ergebnis 3 Mal hintereinander auftritt, beträgt P("Zahl" und "Zahl" und "Zahl") = P(1 * 1 * 1) = 0,5 * 0,5 * 0,5 = (1/2)^3 = 1/8. Bei 4 gleichen Ereignissen hintereinander wäre die Wahrscheinlichkeit nur noch 6,25 %. Kommt es zu einer Häufung von solchen Serien mit drei oder mehr gleichen Münzwürfen hintereinander, gehen Teilnehmer diese Münzwurfspiels davon aus, dass etwas nicht stimmt und dass es sich vermutlich nicht um eine faire Münze handelt, bei des sowohl "Zahl" als auch "Kopf" gleich wahrscheinlich vorkommen.
+\
+\
+
+#### 2) Simuliere die Folge von 100 Würfen eines Würfels mit dem Computer. Wir gehen dabei von einem „fairen“ Würfel aus, bei dem die Zahl „6“ mit einer Wahrscheinlichkeit von 1/6 gewürfelt wird.
+**Erzeuge dazu ein Feld (einen Vektor) mit 100 Komponenten, in den mit 1/6 Wahrscheinlichkeit „1“ („Sechs“) oder mit Wahrscheinlichkeit 5/6 „0“ („nicht Sechs“) eingetragen werden. Betrachte die entstehenden Muster. Wie oft treten 3 oder mehrere Sechser in Serie auf?**
+```{r}
+X.vec <- 1:100
+Wuerfeln.vec <- floor(runif(length(X.vec),1,7))
+Wuerfeln.vec
+Wuerfelwahrscheinlichkeit.vec <- (Wuerfeln.vec == 6) * 1
+Wuerfelwahrscheinlichkeit.vec
+Wuerfelwahrscheinlichkeit0.vec <- Wuerfelwahrscheinlichkeit.vec
+```
+```{r}
+n <- 5
+```
+
+Es wird angenommen, dass nicht öfter als `r n` Mal hintereinander die Zahl 6 gewürfelt wird.
+```{r}
+Wuerfelserie.df <- data.frame(Seriengröße = c(1:n), Anzahl_6 = rep(0,n))
+N1 <- sum(Wuerfelwahrscheinlichkeit.vec)
+Wuerfelwahrscheinlichkeit1.vec <- Wuerfelwahrscheinlichkeit.vec * c(0,Wuerfelwahrscheinlichkeit.vec[-length(Wuerfelwahrscheinlichkeit.vec)])
+N2 <- sum(Wuerfelwahrscheinlichkeit1.vec + c(Wuerfelwahrscheinlichkeit1.vec[-1],0) > 0)
+Wuerfelserie.df$Anzahl_6[1] <- N1-N2
+
+
+i <- 2
+while (i <= n) {
+  Wuerfelwahrscheinlichkeit.vec <- Wuerfelwahrscheinlichkeit1.vec
+  N1 <- sum(Wuerfelwahrscheinlichkeit.vec)
+  Wuerfelwahrscheinlichkeit1.vec <- Wuerfelwahrscheinlichkeit.vec * c(0,Wuerfelwahrscheinlichkeit.vec[-length(Wuerfelwahrscheinlichkeit.vec)])
+  N2 <- sum(Wuerfelwahrscheinlichkeit1.vec + c(Wuerfelwahrscheinlichkeit1.vec[-1],0) > 0)
+  Wuerfelserie.df$Anzahl_6[i] <- N1-N2
+  i <- i + 1
+}
+Wuerfelserie.df
+```
+```{r}
+Sechserserie <- Wuerfelserie.df$Anzahl_6[3] + Wuerfelserie.df$Anzahl_6[4] + Wuerfelserie.df$Anzahl_6[5]
+Sechserserie
+```
+Beim zufälligen Würfelversuch mit einem fairen Würfel tritt eine Serie mit 3 oder mehr 6en hintereinander `r Sechserserie` Mal auf.\
+```{r}
+plot(X.vec, Wuerfeln.vec, ylim=c(1,6), xlab = "Würfelversuch", ylab = "Würfelergebnis", main = "Ergebnis von 100 Würfelversuchen")
+abline(h=6, col="red")
+```
+\
+\
+
+#### 3) Erzeuge eine Menge von N auf dem Intervall [-1, +1] gleichverteilten Zufallszahlen mit dem Computer. Verwende diese Zufallszahlen um daraus eine Menge M von N/2 Punkten in der Ebene zu erzeugen. Sie liegen alle in einem Quadrat Q zwischen -1 <= x <= +1 und -1 <= y <= +1. Nähere mit diesen Zufallszahlen die Zahl pi mit einer Monte-Carlo-Simulation. Dazu werden jene Zufallszahlen auf Q, die innerhalb eines Kreises mit dem Radius 1 liegen (in Q eingeschriebener Kreis) durch die Gesamtanzahl |M| der Punkte auf Q dividiert (und damit das Verhältnis der Kreisfläche zur Quadratfläche geschätzt). Wie entwickelt sich die Schätzung für pi in Abhängigkeit von N?
+```{r}
+N <- 10
+X.vec <- runif(N,-1,1)
+X.vec
+Y.vec <- runif(N,-1,1)
+Y.vec
+```
+
+
+```{r}
+plot(X.vec, Y.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1.2,1.2), ylim = c(-1.2,1.2))
+abline(h = 0)
+abline(v = 0)
+```
+```{r}
+M.arr <- rbind(X.vec, Y.vec)
+M.arr
+```
+
+\
+\
+
+#### 4) Aus Alkoholkontrollen nach Verkehrsunfällen schätzt man, dass rund vier Prozent der verunfallten Lenker einen unzulässig hohen Alkoholpegel hatten. Gleichzeitig wurden 17 % der Unfälle mit tödlichen Folgen von alkoholisierten Lenkern verursacht.
+**a) Daraus ergibt sich, dass bei 83 % der Unfälle mit tödlichen Folgen kein Alkohol mit im Spiel war. Sind also alkoholisierte Autofahrer doch die sichereren Fahrer? (Beantworten Sie diese Frage am besten nach Klärung von Punkt b)**\
+
+**b) Sei Umort das Ereignis „Unfall mit tödlichen Folgen“ und P(Umort | U Ç alk) die Wahrscheinlichkeit (das Risiko) für tödliche Folgen bei einem Unfall unter Alkoholeinfluss. Benennen wir gleichermaßen mit P(Umort | U Ç ¬alk) die Wahrscheinlichkeit (das Risiko) in nüchternem Zustand einen Unfall mit tödlichen Folgen zu verursachen. Wie groß ist das Verhältnis der beiden Risiken, d.h. das Verhältnis von P(Umort | U Ç alk) zu P(Umort | U Ç ¬alk) ?**
+
+Text
+\
+\
+
+#### 5) Die Auswertung von gemeldeten Autounfällen hat für 10.000 beteiligte Insassen folgendes Ergebnis ergeben: \ 90 der 190 dabei verstorbenen Insassen waren nicht angegurtet. Den größten Teil machen jene 8.910 Personen aus, die angegurtet waren und den Unfall überlebt haben.
+**a) Erstelle aus den Angaben eine Kontingenztabelle und vervollständige sie.**\
+**b) Welcher Anteil der verunfallten Personen war insgesamt angegurtet?**\
+**c) Sind das Überleben mit und ohne Gurt unabhängige Ereignisse?**\
+**d) Um wieviel höher ist das Risiko tödlich zu verunglücken für Insassen ohne Gurt im Vergleich zu angegurteten Insassen?**\
+dd
+\
+\
+#### 6) 
