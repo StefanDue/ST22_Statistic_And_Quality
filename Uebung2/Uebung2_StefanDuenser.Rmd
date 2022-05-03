@@ -135,22 +135,73 @@ abline(h=6, col="red")
 
 #### 3) Erzeuge eine Menge von N auf dem Intervall [-1, +1] gleichverteilten Zufallszahlen mit dem Computer. Verwende diese Zufallszahlen um daraus eine Menge M von N/2 Punkten in der Ebene zu erzeugen. Sie liegen alle in einem Quadrat Q zwischen -1 <= x <= +1 und -1 <= y <= +1. Nähere mit diesen Zufallszahlen die Zahl pi mit einer Monte-Carlo-Simulation. Dazu werden jene Zufallszahlen auf Q, die innerhalb eines Kreises mit dem Radius 1 liegen (in Q eingeschriebener Kreis) durch die Gesamtanzahl |M| der Punkte auf Q dividiert (und damit das Verhältnis der Kreisfläche zur Quadratfläche geschätzt). Wie entwickelt sich die Schätzung für pi in Abhängigkeit von N?
 ```{r}
-N <- 10
-X.vec <- runif(N,-1,1)
-X.vec
-Y.vec <- runif(N,-1,1)
-Y.vec
+install.packages("plotrix")
+library("plotrix")
+```
+```{r}
+N <- 100
+Stichprobenumfang <- 10
+Param.arr <- rbind(rep(0,Stichprobenumfang), rep(0,Stichprobenumfang), rep(0,Stichprobenumfang))
+Kreiszahl.df <- data.frame(Mu = rep(0,Stichprobenumfang), Sigma = rep(0,Stichprobenumfang), Varianz = rep(0,Stichprobenumfang))
 ```
 
 
 ```{r}
-plot(X.vec, Y.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1.2,1.2), ylim = c(-1.2,1.2))
+X1.vec <- runif(N,-1,1)
+Y1.vec <- runif(N,-1,1)
+for (i in 1:Stichprobenumfang) {
+  X.vec <- runif(N,-1,1)
+  Y.vec <- runif(N,-1,1)
+  D.vec <- sqrt(X.vec^2 + Y.vec^2)
+  N.vec <- (D.vec <= 1) * 1
+  n <- sum(N.vec)
+  pi <- (n / N) * 4
+  mu <- pi
+  sgm <- sd(D.vec*4)
+  var <- (1 / (N - 1)) * sum((D.vec * 4) - mu)
+  Param.arr[1:3,i] <- c(mu, sgm, var)
+  
+  Kreiszahl.df$Mu[i] <- mu
+  Kreiszahl.df$Sigma[i] <- sgm
+  Kreiszahl.df$Varianz[i] <- var
+  
+  N <- N + 100
+}
+
+Param.arr
+```
+```{r}
+Kreiszahl.df
+```
+
+```{r}
+summary(Param.arr[1,])
+```
+```{r}
+plot(X1.vec, Y1.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
 abline(h = 0)
 abline(v = 0)
+draw.circle(0, 0, 1, border = "red", lwd = 3)
 ```
 ```{r}
-M.arr <- rbind(X.vec, Y.vec)
-M.arr
+Param.arr[1,1]
+Param.arr[2,1]
+Param.arr[3,1]
+```
+
+```{r}
+plot(X.vec, Y.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
+abline(h = 0)
+abline(v = 0)
+draw.circle(0, 0, 1, border = "red", lwd = 3)
+```
+```{r}
+Param.arr[1,Stichprobenumfang]
+Param.arr[2,Stichprobenumfang]
+Param.arr[3,Stichprobenumfang]
+```
+```{r}
+plot(Stichprobenumfang, Kreiszahl.df$Mu)
 ```
 
 \
