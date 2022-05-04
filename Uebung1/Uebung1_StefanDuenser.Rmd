@@ -450,7 +450,6 @@ Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe 
 # B) VERSTÄNDNISFRAGEN
 
 ## B-1) Zeige, dass das arithmetische Mittel unter dem Schwerpunkt der Häufigkeitsfunktion liegt.
-Bild
 \
 ![Arithmetisches Mittel liegt unter dem Schwerpunkt der Häufigkeitsfunktion](../Uebung1/B1.png)
 \

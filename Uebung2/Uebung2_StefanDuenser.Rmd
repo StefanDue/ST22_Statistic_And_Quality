@@ -139,89 +139,88 @@ install.packages("plotrix")
 library("plotrix")
 ```
 ```{r}
-N <- 100
-Stichprobenumfang <- 10
-Param.arr <- rbind(rep(0,Stichprobenumfang), rep(0,Stichprobenumfang), rep(0,Stichprobenumfang))
-Kreiszahl.df <- data.frame(Mu = rep(0,Stichprobenumfang), Sigma = rep(0,Stichprobenumfang), Varianz = rep(0,Stichprobenumfang))
+N <- 10
+Sprung <- 100
+MaxN <- 10000
+Pi.vec = rep(0,Sprung)
 ```
 
 
 ```{r}
-X1.vec <- runif(N,-1,1)
-Y1.vec <- runif(N,-1,1)
-for (i in 1:Stichprobenumfang) {
-  X.vec <- runif(N,-1,1)
-  Y.vec <- runif(N,-1,1)
-  D.vec <- sqrt(X.vec^2 + Y.vec^2)
-  N.vec <- (D.vec <= 1) * 1
-  n <- sum(N.vec)
-  pi <- (n / N) * 4
-  mu <- pi
-  sgm <- sd(D.vec*4)
-  var <- (1 / (N - 1)) * sum((D.vec * 4) - mu)
-  Param.arr[1:3,i] <- c(mu, sgm, var)
+while (N < MaxN) {
+  Pi_Random.vec <- runif(N,-1:1)
+  M.df <- as.vector(data.frame(xValue = sample(Pi_Random.vec, N/2, replace = TRUE), yValue = sample(Pi_Random.vec, N/2, replace = TRUE)))
   
-  Kreiszahl.df$Mu[i] <- mu
-  Kreiszahl.df$Sigma[i] <- sgm
-  Kreiszahl.df$Varianz[i] <- var
-  
-  N <- N + 100
+  n <- 0
+  j <- 1
+  while (j <= N/2) {
+    D <- sqrt(M.df$xValue[j]^2 + M.df$yValue[j]^2)
+    if(D <= 1){
+      n <- n + 1
+    }
+    j <- j + 1
+  }
+  N <- N + Sprung
+  Pi.vec[N/Sprung] <- (n/N) * 18
 }
-
-Param.arr
-```
-```{r}
-Kreiszahl.df
+Pi.vec
 ```
 
 ```{r}
-summary(Param.arr[1,])
+summary(Pi.vec)
 ```
 ```{r}
-plot(X1.vec, Y1.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
+plot(M.df, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
 abline(h = 0)
 abline(v = 0)
 draw.circle(0, 0, 1, border = "red", lwd = 3)
 ```
 ```{r}
-Param.arr[1,1]
-Param.arr[2,1]
-Param.arr[3,1]
+plot(Pi.vec, ylab = "Schätzwert Zahl Pi", main = "Abhängigkeit vom Pi-Schätzwert von N", xlab = "Stichprobengröße")
+abline(h = 3.14159, col = "red")
 ```
-
-```{r}
-plot(X.vec, Y.vec, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
-abline(h = 0)
-abline(v = 0)
-draw.circle(0, 0, 1, border = "red", lwd = 3)
-```
-```{r}
-Param.arr[1,Stichprobenumfang]
-Param.arr[2,Stichprobenumfang]
-Param.arr[3,Stichprobenumfang]
-```
-```{r}
-plot(Stichprobenumfang, Kreiszahl.df$Mu)
-```
-
+Mit steigender Menge an Zufallszahlen, steigt auch die Wahrscheinlichkeit, dass sich mehr Zufallszahlen innerhalb des Kreises befinden relativ zu den Zufallszahlen außerhalb des Kreises im Quadrat. Die Annäherung an Pi ist daher bei steigendem N größer.
 \
 \
 
-#### 4) Aus Alkoholkontrollen nach Verkehrsunfällen schätzt man, dass rund vier Prozent der verunfallten Lenker einen unzulässig hohen Alkoholpegel hatten. Gleichzeitig wurden 17 % der Unfälle mit tödlichen Folgen von alkoholisierten Lenkern verursacht.
+#### 4) Aus Alkoholkontrollen nach Verkehrsunfällen schätzt man, dass rund vier Prozent der verunfallten Lenker einen unzulässig hohen Alkoholpegel hatten. Gleichzeitig wurden 17 % der Unfälle mit tödlichen Folgen von alkoholisierten Lenkern verursacht. Alkoholisierte Fahrer sind somit nich die sichereren Autofahrer.
+\
 **a) Daraus ergibt sich, dass bei 83 % der Unfälle mit tödlichen Folgen kein Alkohol mit im Spiel war. Sind also alkoholisierte Autofahrer doch die sichereren Fahrer? (Beantworten Sie diese Frage am besten nach Klärung von Punkt b)**\
+Nein. Das Risiko, einen Unfall mit Todesfolge in alkoholisiertem Zustand zu verursachen ist fas 5 Mal so hoch wie in nicht alkoholisiertem Zustan. Die Berechnung dazu ist bei b) zu finden.
 
 **b) Sei Umort das Ereignis „Unfall mit tödlichen Folgen“ und P(Umort | U Ç alk) die Wahrscheinlichkeit (das Risiko) für tödliche Folgen bei einem Unfall unter Alkoholeinfluss. Benennen wir gleichermaßen mit P(Umort | U Ç ¬alk) die Wahrscheinlichkeit (das Risiko) in nüchternem Zustand einen Unfall mit tödlichen Folgen zu verursachen. Wie groß ist das Verhältnis der beiden Risiken, d.h. das Verhältnis von P(Umort | U Ç alk) zu P(Umort | U Ç ¬alk) ?**
-
-Text
+![Unfall mit Todesfolge mit und ohne Alkohol](../Uebung2/4b.png)
 \
 \
 
-#### 5) Die Auswertung von gemeldeten Autounfällen hat für 10.000 beteiligte Insassen folgendes Ergebnis ergeben: \ 90 der 190 dabei verstorbenen Insassen waren nicht angegurtet. Den größten Teil machen jene 8.910 Personen aus, die angegurtet waren und den Unfall überlebt haben.
+#### 5) Die Auswertung von gemeldeten Autounfällen hat für 10.000 beteiligte Insassen folgendes Ergebnis ergeben: \ 90 der 190 dabei verstorbenen Insassen waren nicht angegurtet. Den größten Teil machen jene 8.910 Personen aus, die angegurtet waren und den Unfall überlebt haben. 
 **a) Erstelle aus den Angaben eine Kontingenztabelle und vervollständige sie.**\
+```{r}
+
+```
+
 **b) Welcher Anteil der verunfallten Personen war insgesamt angegurtet?**\
+```{r}
+Verunf_Angeg <- 8910+(190-90)
+Verunf_Angeg
+Anteil_Verunf_Angeg <- (Verunf_Angeg/10000)*100
+Anteil_Verunf_Angeg
+```
+`r Anteil_Verunf_Angeg` % der verunfallten Personen waren angegurtet.\
 **c) Sind das Überleben mit und ohne Gurt unabhängige Ereignisse?**\
+Da die Wahrscheinlichkeit, mit Gurt zu überleben unterschiedlich zu der Wahrscheinlichkeit, mit Gurt tödlich zu Verunglücken, sind die beiden Ergeinisse abhängig voneinander.\
+Ist man angegurtet, überlebt man einen Unfall oder nicht. Zum Beispiel sind 100 Personen bei einem Unfall angegurtet. 98 Personen überleben den Unfall. Um auf 100 Personen zu kommen, müssen folglich zwei Personen sterben. Die Ereignisse sind voneinander abhängig, da die Überlebenden und die Toten gemeinsam wieder die Ausgangsmenge ergeben müssen.\
 **d) Um wieviel höher ist das Risiko tödlich zu verunglücken für Insassen ohne Gurt im Vergleich zu angegurteten Insassen?**\
-dd
+```{r}
+angeschnallt <- (190-90) / Verunf_Angeg
+nichtAngeschnallt <- 90 / (10000-Verunf_Angeg)
+Risiko <- nichtAngeschnallt/angeschnallt
+Risiko
+```
+Das Risiko, bei einem Unfall zu sterben, wenn man nicht angeschnallt ist, ist `r Risiko`-fach höher. 
 \
 \
-#### 6) 
+#### 6) In einer Produktion wurde über eine längere Periode mittels 100%-Endkontrolle der pro Woche entdeckte Ausschuss festgehalten.
+```{r}
+
+```
