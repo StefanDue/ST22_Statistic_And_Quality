@@ -2,10 +2,10 @@
 title: "Statistik und Qualität - Ausarbeitung der ersten Übung"
 author: "Stefan Dünser"
 output:
-  pdf_document: default
   word_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 # A) TECHNISCHE FERTIGKEITEN\
 ## A-1) Handelt es sich bei den vorliegenden statistischen Gesamtheiten um Bestands- oder Bewegungsgrößen?

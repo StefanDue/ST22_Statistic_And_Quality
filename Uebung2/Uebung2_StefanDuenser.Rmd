@@ -1,10 +1,10 @@
 ---
-title: "Statistik und Qualität - Ausarbeitung der ersten Übung"
+title: "Statistik und Qualität - Ausarbeitung der zweiten Übung"
 author: "Stefan Dünser"
 output:
+  word_document: default
   html_document:
     df_print: paged
-  word_document: default
   pdf_document: default
 ---
 #### 1) Simuliere die Folge von 100 Münzwürfen mit dem Computer. Wir gehen dabei von einer „fairen“ Münze aus, d.h. von einer Münze, die nach einem Wurf zu je 50 % „Kopf“ oder „Zahl“ zeigt. Erzeuge dazu ein Feld (einen Vektor) mit 100 Komponenten, in den mit je 50 % Wahrscheinlichkeit „0“ („Kopf“) oder „1“ („Zahl“) eingetragen werden. Betrachte die entstehenden Muster. Wie oft treten 3 oder mehrere gleiche Ergebnisse in Serie auf? Wie (statistisch) bedeutsam sind diese Häufungen von Ereignissen?
@@ -135,7 +135,6 @@ abline(h=6, col="red")
 
 #### 3) Erzeuge eine Menge von N auf dem Intervall [-1, +1] gleichverteilten Zufallszahlen mit dem Computer. Verwende diese Zufallszahlen um daraus eine Menge M von N/2 Punkten in der Ebene zu erzeugen. Sie liegen alle in einem Quadrat Q zwischen -1 <= x <= +1 und -1 <= y <= +1. Nähere mit diesen Zufallszahlen die Zahl pi mit einer Monte-Carlo-Simulation. Dazu werden jene Zufallszahlen auf Q, die innerhalb eines Kreises mit dem Radius 1 liegen (in Q eingeschriebener Kreis) durch die Gesamtanzahl |M| der Punkte auf Q dividiert (und damit das Verhältnis der Kreisfläche zur Quadratfläche geschätzt). Wie entwickelt sich die Schätzung für pi in Abhängigkeit von N?
 ```{r}
-install.packages("plotrix")
 library("plotrix")
 ```
 ```{r}
@@ -148,7 +147,7 @@ Pi.vec = rep(0,Sprung)
 
 ```{r}
 while (N < MaxN) {
-  Pi_Random.vec <- runif(N,-1:1)
+  Pi_Random.vec <- runif(N,-1,1)
   M.df <- as.vector(data.frame(xValue = sample(Pi_Random.vec, N/2, replace = TRUE), yValue = sample(Pi_Random.vec, N/2, replace = TRUE)))
   
   n <- 0
@@ -161,9 +160,8 @@ while (N < MaxN) {
     j <- j + 1
   }
   N <- N + Sprung
-  Pi.vec[N/Sprung] <- (n/N) * 18
+  Pi.vec[N/Sprung] <- (n/N) * 8
 }
-Pi.vec
 ```
 
 ```{r}
@@ -193,11 +191,21 @@ Nein. Das Risiko, einen Unfall mit Todesfolge in alkoholisiertem Zustand zu veru
 \
 \
 
-#### 5) Die Auswertung von gemeldeten Autounfällen hat für 10.000 beteiligte Insassen folgendes Ergebnis ergeben: \ 90 der 190 dabei verstorbenen Insassen waren nicht angegurtet. Den größten Teil machen jene 8.910 Personen aus, die angegurtet waren und den Unfall überlebt haben. 
+#### 5) Die Auswertung von gemeldeten Autounfällen hat für 10.000 beteiligte Insassen folgendes Ergebnis ergeben: \ 90 der 190 dabei verstorbenen Insassen waren nicht angegurtet. Den größten Teil machen jene 8.910 Personen aus, die angegurtet waren und den Unfall überlebt haben. \
+
 **a) Erstelle aus den Angaben eine Kontingenztabelle und vervollständige sie.**\
 ```{r}
-
+Autounfall.tab <- as.table(rbind(c(100,90,190), c(8910,900,9810), c(9010,990,10000)))
+dimnames(Autounfall.tab) <- list(Gurt = c("angeschnallt", "nicht angeschnallt", "Gesamt"), Leben = c("gestorben", "überlebt", "Gesamt"))
+Autounfall.tab
 ```
+Während in der oberen Tabelle die absoluten Zahlen der Autounfälle mit der Untersuchung zwischen angeschnallt und nicht angeschnallt sowie überleben und sterben dargestellt sind, kann man der unteren Tabelle die relativen Werte dieser Untersuchung sehen.\
+```{r}
+Kontingtab.tab <- as.table(rbind(c(1,0.9,1.9), c(89.1,9,98.1), c(90.1,9.9,100)))
+dimnames(Kontingtab.tab) <- list(Gurt = c("angeschnallt", "nicht angeschnallt", "Gesamt"), Leben = c("gestorben", "überlebt", "Gesamt"))
+Kontingtab.tab
+```
+
 
 **b) Welcher Anteil der verunfallten Personen war insgesamt angegurtet?**\
 ```{r}
@@ -221,6 +229,10 @@ Das Risiko, bei einem Unfall zu sterben, wenn man nicht angeschnallt ist, ist `r
 \
 \
 #### 6) In einer Produktion wurde über eine längere Periode mittels 100%-Endkontrolle der pro Woche entdeckte Ausschuss festgehalten.
+![Ausschusswahrscheinlichkeit](../Uebung2/Ue2_6.png)
+Berechnung des Erwartungswerts:
 ```{r}
-
+mu <- 0*0.29 + 1*0.21 + 3*0.4 + 4*0.09 + 5*0.01
+mu
 ```
+Der Erwartungswert von `r mu` beschreibt die Wahrscheinlichkeit für den Auswurf pro Woche. 
