@@ -24,6 +24,7 @@ output:
 
 ## A-2) Im Servicecenter eines Unternehmens werden über einen Zeitraum eines Tages die eingehenden Anrufe aufgezeichnet. Gezählt wird die Anzahl der pro 10-Minuten-Zeitintervall eingehenden Anrufe. Für 40 derartige Zeitintervalle erhält man folgende Ergebnisse:
 ```{r}
+# Erstellen einer Urliste
 Liste.vec <- c(0, 0, 1, 3, 4, 1, 2, 2, 1, 1, 1, 2, 3, 0, 2, 0, 1, 3, 1, 2, 2, 0, 1, 1, 6, 1, 0, 2, 3, 1, 1, 4, 2, 3, 2, 0, 3, 0, 1, 2)
 Liste.vec
 ```
@@ -45,15 +46,18 @@ table(Liste.vec)
 ```
 
 ```{r}
+# Beim folgenden Baplot muss die x-Achse separat noch einmal mit den Werten von 0 bis 6 initialisiert werden (siehe Vector levels) da bei einer automatischen Nummerierung die 5 wegfallen würde, da dieses Merkmal in der Urliste nicht vorkommt. 
 barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6))), ylim = c(0,15), xlab = "Anzahl der Anrufe innerhalb eines 10-Minuten-Zeitintervalls", ylab = "Absolute Häufigkeit", main = "Absolute Häufigkeitsverteilung", col = "blue")
 ```
 \
 **Relative Häufigkeit:**
 ```{r}
+# Für die relative Häufigkeit wird die Absolute Häufigkeit durch die Anzahl der Elemente im Vektor dividiert. Wahlweise könnte noch *100 gerechnet werden, um eine %-Zahl zu erhalten
 table(Liste.vec)/length(Liste.vec)
 ```
 
 ```{r}
+# Auch hier wieder de separate Definition des x-Vektors für die Darstellung mi 5.
 barplot(table(factor(Liste.vec,levels=c(0,1,2,3,4,5,6)))/sum(table(Liste.vec)), ylim = c(0,0.4), xlab = "Anzahl der Anrufe innerhalb eines 10 min Zeitintervalls",ylab = "relative Häufigkeit", main = "Relative Häufigkeitsverteilung", col = "blue")
 ```
 \
@@ -69,20 +73,21 @@ abline(0.25, 0, lty = "dashed")
 abline(0.5, 0, lty = "dashed", col = "red")
 abline(0.75, 0, lty = "dashed")
 ```
-\
-\
+Die Darstellung der Summenhäufigkeit wird meist in einem Liniendiagramm gemacht. Eine solche Darstellung ist in der nachfolgenden Grafik ersichtlich.\
 \
 __*Andere Darstellung der Summenhäufigkeit*__
 ```{r}
 Breaks.vec <- c(0:6)
 SummHfk.vec <- cumsum(table(Liste.vec))/sum(table(Liste.vec))
 
+# plot-Funktion erzeugt ein Punktdiagramm
+# Für die bessere Lesbarkeit werden die einzelnen Punkte durch eine Linie miteinander verbunden
 plot(Breaks.vec, c(0,SummHfk.vec), main = "Summenhäufigkeit", xlab = "Anzahl der Anrufe innerhalb eines Zeitintervalls", ylab = "rel. Häufigkeit", type = "l", lty = 1)
-points(Breaks.vec, c(0,SummHfk.vec))
-lines(Breaks.vec, c(0,SummHfk.vec), type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+points(Breaks.vec, c(0,SummHfk.vec))                            # Darstellung der Werte als Punkte
+lines(Breaks.vec, c(0,SummHfk.vec), type = "s", lty = 3)        # Verbindungslinie zwischen den Punkten
+abline(0.25, 0, lty = "dashed")                                 # unteres Quartil
+abline(0.75, 0, lty = "dashed")                                 # oberes Quartil
+abline(0.5, 0, lty = "dashed", col = "red")                     # Median
 ```
 
 ##### **c) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
@@ -96,7 +101,9 @@ __*Median:*__ Der Median wird über die y-Achse ermittelt. Der Median befindet s
 **Zentralmaße:**
 \
 __*Modus*__
+Der Modus beschreibt den Wert, der in der Werteliste am häufigsten vorkommt.
 ```{r}
+# Für den Modus gibt es in R keinen Befehl, weshalb hier die Ermittlung über eine Funktion erfolgt.
 getmode <- function(Liste.vec) {
    uniqv <- unique(Liste.vec)
    uniqv[which.max(tabulate(match(Liste.vec, uniqv)))]
@@ -108,46 +115,50 @@ mode
 \
 \
 \
-__*Median*__
+__*Median*__\
+Der Median beschreibt "den Wert in der Mitte". Er ist der Zentralwert aller Werte in der Werteliste.
 ```{r}
 median(Liste.vec)
 ```
-__*Arithmetisches Mittel*__
+__*Arithmetisches Mittel*__\
+Das arithmetische Mittel, oder Durchschnitt, bezeichnet den Mittelwert aller Werte in einer Werteliste.
 ```{r}
 mean(Liste.vec)
 ```
 \
 **Streumaße:**
 \
-__*Minimum*__
+__*Minimum*__\
+Das Minimum ist das kleinste Element in einer Liste
 ```{r}
 Minimum <- min(Liste.vec)
 Minimum
 
 ```
-__*Maximum*__
+__*Maximum*__\
+Das Maximum ist der größte Wert in einer Liste.
 ```{r}
 Maximum <- max(Liste.vec)
 Maximum
 ```
-__*Spannweite*__
+__*Spannweite*__\
+Die Spannweite misst die Streuung in einer Beobachtung von ordinalskalierten Merkmalen.
 ```{r}
 Spannweite <- range(Liste.vec)
 Spannweite
 ```
-__*Quantile*__
+__*Quantile*__\
+Ähnlich wie der Median teilt ein Quantil die Werteliste in 100 gleich große Einheiten. Der Median an sich ist auch ein Quantil, nämlich da Qantil bei 50. Das Quartil teilt die Werte nicht in 100 sondern in 4 Einheiten.
 ```{r}
 quantile(Liste.vec)
 ```
-__*Mittlere absolute Abweichung*__
+__*Mittlere absolute Abweichung*__\
+Die mittlere absolute Abweichung gibt den Wert an, um die die Stichprobe um den Median schwankt. 
 ```{r}
 mean(abs(Liste.vec-mean(Liste.vec)))
 ```
-\
-\
-\
-\
-__*Standardabweichung*__
+__*Standardabweichung*__\
+Die Standardabweichung ist ein Maß für die Streuung der Wahrscheinlichkeitsdichte um ihren Schwerpunkt.
 ```{r}
 sd(Liste.vec)
 ```
@@ -165,41 +176,35 @@ Besonders Auffällig ist bei diesem Boxplot bzw. den Werten aus der Liste, dass 
 
 ## A-3) Eine Anzahl von 1000 Kleinmotoren weist folgende Lebensdauer auf:
 ```{r}
-Klassen.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]")
+Klassen.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]")    # Einteilung in gleiche Klassenbreiten
 Anzahl.vec <- c(33,276,404,237,50)
 
 Klassen.vec; Anzahl.vec
 ```
 ```{r}
+# Darstellung der Daten in einer Tabelle
 Lebensdauer.df <- data.frame(Lebensdauer=Klassen.vec, Anzahl_Motoren=Anzahl.vec)
-
 Lebensdauer.df
 ```
 \
 __*Ergänzung der vorgegebenen Liste um die Klassenbreite und die Klassenmitte*__
 ```{r}
 Lebensdauer.df <- data.frame(Lebensdauer=Lebensdauer.df$Lebensdauer, Klassenmitte=c(1,3,5,7,9), Klassenbreite=rep(2,5), Anzahl_Motoren=Lebensdauer.df$Anzahl_Motoren)
-
 Lebensdauer.df
 ```
 \
 __*Ergänzung der Tabelle um die relative Häufigkeitsverteilung und die Summenhäufigkeit*__
 ```{r}
 RelHfgk.vec <- Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren)
-
 SumHfgk.vec <- cumsum(RelHfgk.vec)
-
 Lebensdauer.df <- data.frame(Lebensdauer.df, RelHfgk.vec, SumHfgk.vec)
-
 Lebensdauer.df
 ```
 
 __*Ergänzung der Tabelle um die Häufigkeitsdichte*__
 ```{r}
 HfgkDichte.vec <- Lebensdauer.df$RelHfgk.vec / Lebensdauer.df$Klassenbreite
-  
 Lebensdauer.df <- data.frame(Lebensdauer.df, Dichte=HfgkDichte.vec)
-
 Lebensdauer.df
 ```
 
@@ -208,12 +213,14 @@ Lebensdauer.df
 \
 **Absolute Häufigkeitsverteilung**
 ```{r}
+# Erstellung einer absoluten Häufigkeitsverteilung mit gleicher Klassenbreite
 barplot(Lebensdauer.df$Anzahl_Motoren, names=Lebensdauer.df$Lebensdauer, col = "blue", xlab = "Lebensdauer in Jahre", ylab = "Anzahl der Motoren", main = "Absolute Häufigkeitsverteilung", ylim = c(0,500))
+# Für eine bessere Lesbarkeit der Darstellung wurden die Limits der y-Achse nicht automatisch sondern manuell geändert. Dadurch sind alle Werte unterhalb des obersten Werts der y-Achse.
 ```
 \
 **Relative Häufigkeitsverteilung**
 ```{r}
-barplot(Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren), ylim = c(0,0.6), xlab = "Lebensdauer in Jahre", ylab = "rel. Häufigkeit", col = "blue", main = "Relative Häufigkeitsverteilung")
+barplot(Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren), names=Lebensdauer.df$Lebensdauer, ylim = c(0,0.6), xlab = "Lebensdauer in Jahre", ylab = "rel. Häufigkeit", col = "blue", main = "Relative Häufigkeitsverteilung")
 ```
 \
 **Summenhäufigkeit**
@@ -221,17 +228,17 @@ barplot(Lebensdauer.df$Anzahl_Motoren / sum(Lebensdauer.df$Anzahl_Motoren), ylim
 X.vec <- c(0,2,4,6,8,10)
 Y.vec <- c(0, Lebensdauer.df$SumHfgk.vec)
 plot(X.vec, Y.vec, type = "l", lty = 1, main = "Summenhäufigkeit", xlab = "max. Lebensdauer in Jahre", ylab = "rel. Häufigkeit")
-points(X.vec, Y.vec)
-lines(X.vec, Y.vec, type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
-abline(0.75, 0, lty = "dashed")
+points(X.vec, Y.vec)                                # Darstellung der Messpunkte als Punkte
+lines(X.vec, Y.vec, type = "s", lty = 3)            # Darstellung der Steigungsdreiecke
+abline(0.25, 0, lty = "dashed")                     # unteres Quartil
+abline(0.5, 0, lty = "dashed", col = "red")         # Median
+abline(0.75, 0, lty = "dashed")                     # oberes Quartil
 ```
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 \
 __*Arithmetisches Mittel - geschätzt:*__ \
-Das arithmetische Mittel liegt bei rund 5. Beim Ablesen des arithmetischen Mittelwerts müssen links und rechts auf der x-Achse gleich viele Werte vorhanden sein.
+Das arithmestische Mittel kann als Schwerpunkt der Häufigkeitsverteilung angesehen werden. Da dieses Beispiel konstante Klassenbereiten hat, kann man das arithmetische Mittel so ablesen, dass links und rechts vom arithmetischen Mittel auf der x-Achse in etwa gleich viele Werte vorhanden sind. Das geschätzte arithmetische Mittel beträgt in dem Fall 5.
 \
 __*Median:*__\
 Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgelesen werden. Der Median beträgt schätzungsweise bei 5.
@@ -241,7 +248,6 @@ Der Median liegt bei 50% auf der y-Achse und der Wert kann auf der x-Achse abgel
 \
 ```{r}
 LangeLebensdauer.vec <- Lebensdauer.df$Anzahl_Motoren[4] + Lebensdauer.df$Anzahl_Motoren[5]
-
 LangeLebensdauer.vec
 ```
 Motoren mit einer Lebensdauer über 6 Jahren befinden sich in der Liste in den letzten beiden statistischen Einheiten. Über die [] kann auf spezielle Vektorelemente/Listenelemente zugegriffen werden. In diesem Fall wird auf die Listenelemente 4 und 5 zugegriffen und für die Anzahl der Motoren, die länger als 6 Jahre laufen, addiert. Somit laufen `r LangeLebensdauer.vec` Motoren länger als 6 Jahre.
@@ -250,6 +256,7 @@ Motoren mit einer Lebensdauer über 6 Jahren befinden sich in der Liste in den l
 \
 **Lebensdauer von Motoren**
 ```{r}
+# Ein Histogramm kann über eine Barplot gezeichnet werden, wenn die Abstände zwischen den Klassen auf 0 gesetzt wird.
 barplot(Lebensdauer.df$Dichte, names=Lebensdauer.df$Lebensdauer, main = "Lebensdauer von Motoren", xlab = "Lebensdauer in Jahre", ylab = "Häufigkeitsdichte", ylim = c(0,0.25), space = 0, col = "blue")
 ```
 
@@ -281,7 +288,6 @@ median(Lebensdauer.vec)
 __*Mittelwert*__
 ```{r}
 Mittelwert <- sum(Lebensdauer.df$RelHfgk.vec * Lebensdauer.df$Klassenmitte)
-
 Mittelwert
 ```
 \
@@ -327,22 +333,17 @@ In diesem Beispiel ist der Modus 5. Da es 5 Jahre Lebensdauer nicht gibt, ist di
 AnzahlTage.vec <- c(16,48,27,9)
 AnzahlEinsätze.vec <- c("[0,10]", "(10,20]", "(20,30]", "(30,80]")
 Service.df <- data.frame(Einsätze = AnzahlEinsätze.vec, Tage = AnzahlTage.vec)
-```
-```{r}
 RelHfk.vec <- Service.df$Tage / sum(Service.df$Tage)
 SumHfk.vec <- cumsum(RelHfk.vec)
-
+# Die Tabelle wird kontinuierlich mit Werten aufgefüllt.
+# In der data.frame Funktion wird immer wieder Service.df mit aufgenommen. Dies dient dazu, die bisherigen Tabellenwerte wieder in die Tabelle miteinzubinden, wenn neue Werte der Tabelle hinzugefügt werden.
 Service.df <- data.frame(Service.df, relHfk = RelHfk.vec, sumHfk = SumHfk.vec)
-```
-```{r}
 Service.df <- data.frame(Service.df, Klassenbreite=c(10,10,10,50), Klassenmitte=c(5,15,25,55))
 ```
 
 ```{r}
 HfkDichte.vec <- Service.df$relHfk / Service.df$Klassenbreite
-
 Service.df <- data.frame(Service.df, Dichte=HfkDichte.vec)
-
 Service.df
 ```
 
@@ -368,18 +369,18 @@ hist(Service.vec, X2a4.vec, main = "Häufigkeitsverteilung (andere Darstellung)"
 Xa4.vec <- c(0,10,20,30,80)
 Ya4.vec <- c(0, Service.df$sumHfk)
 plot(Xa4.vec, Ya4.vec, main = "Summenhäufigkeit", xlab = "Anzahl Anrufe pro Tag", ylab = "rel. Häufigkeit", type = "l", lty = 1)
-points(Xa4.vec, Ya4.vec)
-lines(Xa4.vec, Ya4.vec, type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+points(Xa4.vec, Ya4.vec)                          
+lines(Xa4.vec, Ya4.vec, type = "s", lty = 3)   # aktivieren der Darstellung der Dreiecke für die Klassen
+abline(0.25, 0, lty = "dashed")                # Linie für das untere Quartil
+abline(0.75, 0, lty = "dashed")                # Linie für das obere Quartil
+abline(0.5, 0, lty = "dashed", col = "red")    # Linie für den Median
 ```
 
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 \
 \
-__*Arithmetisches Mittel:*__ Das aritmethische Mittel wird auf 19 geschätzt. Links und rechts auf der x-Achse müssen gleich viele Werte liegen, da das arithmetische Mittel den Schwerpunkt der Verteilung symbolisiert.
+__*Arithmetisches Mittel:*__ Das aritmethische Mittel wird auf 19 geschätzt. Das arithmetische Mittel beschreibt den Schwerpunkt der Verteilung.  Da die Klassenbreiten bei dieser Verteilung nicht konstant sind, kann das arithmetische Mittel nicht exakt durch die Methode der "gleich viele Werte links und rechts des arithmetischen Mittels auf der x-Achse" angewandt werden. Die Häufigkeitsverteilung (andere Darstellung) liefert allerdings die Möglichkeit, das arithmetische Mittel anhand der Fläche abzuschätzen. Das arithmetische Mittel liegt dort, wo die Flächen links und rechts davon gleich gorß sind. In diesem Fall kann das arithmetische Mittel auf 20 geschätzt.
 \
 __*Median:*__ Der Median kann an der y-Achse ablesen werden. Genauer gesagt an der Stelle, an der die 50% Marke bei der relativen Häufigkeit im Summenhäufigkeitsdiagramm liegt. In diesem Fall wird der Median auf 16 geschätzt. 
 
@@ -413,7 +414,6 @@ median(Service.vec)
 __*Mittelwert*__
 ```{r}
 Mittelwert <- sum(Service.df$RelHfgk.vec * Service.df$Klassenmitte)
-
 Mittelwert
 ```
 \
@@ -444,8 +444,9 @@ __*Mittlere absolute Abweichung*__
 mean(abs(Service.vec-mean(Service.vec)))
 ```
 Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe zielführender, da das arithmetische Mittel auch Ausreißer mit berücksichtigt, was beim Median nicht der Fall ist.
-
-
+\
+\
+\
 
 # B) VERSTÄNDNISFRAGEN
 
@@ -464,6 +465,7 @@ Die Aussagekraft des Medians für die Mitte der Daten ist für diese Datenreihe 
 
 ## **B-3)** Das komma-separierte File **"Fehlerquote.csv"** enthält das Prüfergebnis von 50 Bauteilen auf Funktionstüchtigkeit. Dabei steht der Eintrag **"0"** für ein fehlerfreies Bauteil und **"1"** für ein fehlerhaftes Bauteil.
 ```{r}
+# Einlesen einer .csv Datei über den read.csv Befehl
 Fehlerquote.df <- read.csv("Fehlerquote.csv", sep = ";", dec = ",", header = TRUE)
 ```
 
@@ -505,6 +507,7 @@ sd(Fehlerquote.df$fehlerhaft)
 \
 __*Standardabweichung über arithmetisches Mittel*__
 ```{r}
+# Anwendung der Formel, die in oben hergleitet worden ist.
 Varianz.vec <- sum((Fehlerquote.df$fehlerhaft - mean(Fehlerquote.df$fehlerhaft))^2/length(Fehlerquote.df$fehlerhaft))
 
 Standardabweichung.vec <- sqrt(Varianz.vec)
@@ -529,7 +532,6 @@ Verteilungsvergleich.df <- read.csv("Verteilungsvergleich.csv", sep = ";", dec =
 __*Würfel*__
 ```{r}
 Würfel.df <- data.frame(Augenzahl = (1:6), abs.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel), rel.Häufigkeit = tabulate(Verteilungsvergleich.df$Wuerfel)/length(Verteilungsvergleich.df$Wuerfel))
-
 Würfel.df <- data.frame(Würfel.df, Summenhfk. = cumsum(Würfel.df$rel.Häufigkeit))
 Würfel.df
 ```
@@ -543,42 +545,46 @@ barplot(Würfel.df$rel.Häufigkeit, names = Würfel.df$Augenzahl, col = "blue", 
 plot(Würfel.df$Augenzahl, Würfel.df$Summenhfk., main = "Summenhäufigkeit Würfel", xlab = "Augenzahl", ylab = "rel. Häufigkeit", type = "l", lty = 1)
 points(Würfel.df$Augenzahl, Würfel.df$Summenhfk.)
 lines(Würfel.df$Augenzahl, Würfel.df$Summenhfk., type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.25, 0, lty = "dashed")               # Linie für das untere Quartil
+abline(0.75, 0, lty = "dashed")               # Linie für das obere Quartil
+abline(0.5, 0, lty = "dashed", col = "red")   # Linie für den Median
 ```
 __*Wartezeit*__
 ```{r}
+# nachfolgende Tabelle wird kontinuierlich mit Werten aufgefüllt
 Zeit.vec <- c(0,3,6,9,12,15,18)
+# es werden Klassen mit derselben Klassenbreite erstellt
 Zeitintervalle.vec <- c("[0,3]", "(3,6]", "(6,9]", "(9,12]", "(12,15]", "(15,18]")
 Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Wartezeit_min, breaks = Zeit.vec))
 Wartezeit.df <- data.frame(Zeit = Zeitintervalle.vec, Klassenbreite = rep(3,6), Klassenmitte = c(1.5,4.5,7.5,10.5,13.5,16.5), abs.Häufigkeit = Klasse.vec, rel.Häufigkeit = Klasse.vec/length(Verteilungsvergleich.df$Wartezeit_min))
-
 Wartezeit.df <- data.frame(Wartezeit.df, Summenhfk. = cumsum(Wartezeit.df$rel.Häufigkeit), Dichte = Wartezeit.df$rel.Häufigkeit/Wartezeit.df$Klassenbreite)
 Wartezeit.df
 ```
 ```{r}
+# Die leere Klasse wurde bereits in der Tabelle mit berücksichtigt. Daher muss für dieses Diagramm kein separater Vektor für die x-Achsenwerte/Klassen erstellt werden.
 barplot(Wartezeit.df$abs.Häufigkeit, names = Wartezeit.df$Zeit, main = "Absolute Häufigkeitsverteilung Wartezeit", xlab = "Wartezeit in min", ylab = "abs. Häufigkeit", col = "blue", ylim = c(0,25))
 ```
 ```{r}
+# Das Histogramm wurde hier wieder über einen Barplot umgesetzt, bei dem der Abstand zwischen den Balken 0 gesetzt wird.
 barplot(Wartezeit.df$Dichte, names = Wartezeit.df$Zeit, main = "Histogramm Wartezeit", xlab = "Wartezeit in min", ylab = "Häufigkeitsdichte", space = 0, col = "blue", ylim = c(0,0.2))
 ```
 ```{r}
 plot(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.), main = "Summenhäufigkeit Wartezeit", xlab = "Wartezeit in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
 points(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.))
 lines(c(0,3,6,9,12,15,18), c(0,Wartezeit.df$Summenhfk.), type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.25, 0, lty = "dashed")               # Linie für das untere Quartil
+abline(0.75, 0, lty = "dashed")               # Linie für das obere Quartil
+abline(0.5, 0, lty = "dashed", col = "red")   # Linie für den Median
 ```
 \
 __*Telegespräche*__
 ```{r}
+# Die nachfolgende Tabelle wird kontinuierlich mit Werten aufgefüllt
 Dauer.vec <- c(0,2,4,6,8,10,12,14,16)
+# Es werden Klassen mit gleicher Breite erstellt.
 Dauer_Intervall.vec <- c("[0,2]", "(2,4]", "(4,6]", "(6,8]", "(8,10]", "(10,12]", "(12,14]", "(14,16]")
 Dauer_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Telgesprae_min, breaks = Dauer.vec))
 Gesprächsdauer.df <- data.frame(Gesprächsdauer = Dauer_Intervall.vec, Klassenbreite = rep(2,8), Klassenmitte = c(1,3,5,7,9,11,13,15), abs.Häufigkeit = Dauer_Klasse.vec, rel.Häufigkeit = Dauer_Klasse.vec/length(Verteilungsvergleich.df$Telgesprae_min))
-
 Gesprächsdauer.df <- data.frame(Gesprächsdauer.df, Summenhfk. = cumsum(Gesprächsdauer.df$rel.Häufigkeit), Dichte = Gesprächsdauer.df$rel.Häufigkeit/Gesprächsdauer.df$Klassenbreite)
 
 Gesprächsdauer.df
@@ -586,24 +592,27 @@ Gesprächsdauer.df
 ```{r}
 barplot(Gesprächsdauer.df$abs.Häufigkeit, names = Gesprächsdauer.df$Gesprächsdauer, ylim = c(0,35), col = "blue", main = "Absolute Häufigkeit Dauer Telefongespräche", ylab = "abs. Häufigkeit", xlab = "Gesprächsdauer in min")
 ```
+Da für die Darstellung gleiche Klassenbreiten verwendet worden sind, ist in der oberen Abbildung ersichtlich, dass es einige leere Klassen gibt. Dies liegt an einem Ausreißerwert, der in der letzten Klasse zu finden ist. Die Daten über die Gesprächsdauer sind somit nicht gleichverteilt. \
+
 ```{r}
 barplot(Gesprächsdauer.df$Dichte, names = Gesprächsdauer.df$Gesprächsdauer, ylim = c(0,0.5), col = "blue", main = "Histogram Dauer Telefongespräch", ylab = "Häufigkeitsdichte", xlab = "Gesprächsdauer in min", space = 0)
 ```
+Auch im Histogramm mit der Häufigkeitsdichte ist dieser Ausreißer gut ersichtlich, da es auch hier viele leere klassen gibt. \
 ```{r}
 plot(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), main =  "Summenhäufigkeit Telefongespräch", xlab = "Gesprächsdauer in min", ylab = "rel. Häufigkeit", type = "l", lty = 1)
 points(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.))
 lines(c(0,2,4,6,8,10,12,14,16), c(0,Gesprächsdauer.df$Summenhfk.), type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.25, 0, lty = "dashed")               # Linie für das untere Quartil
+abline(0.75, 0, lty = "dashed")               # Linie für das obere Quartil
+abline(0.5, 0, lty = "dashed", col = "red")   # Linie für den Median
 ```
 __*Stiftlänge*__
 ```{r}
 Länge.vec <- c(3.3,3.4,3.5,3.6,3.7,3.8)
+# Es werden gleiche Klassenbreiten gewählt. Die Klassenbreite wird in einem Intervall dargestellt. 
 Länge_Intervall.vec <- c("[3.3,3.4]", "(3.4,3.5]", "(3.5,3.6]", "(3.6,3.7]", "(3.7,3.8]")
 Länge_Klasse.vec <- tabulate(cut(Verteilungsvergleich.df$Stiftlaenge_cm, breaks = Länge.vec))
 Stiftlänge.df <- data.frame(Stiftlänge = Länge_Intervall.vec, Klassenbreite = rep(0.1,5), Klassenmitte = c(3.35,3.45,3.55,3.65,3.75), abs.Häufigkeit = Länge_Klasse.vec, rel.Häufigkeit = Länge_Klasse.vec/length(Verteilungsvergleich.df$Stiftlaenge_cm))
-
 Stiftlänge.df <- data.frame(Stiftlänge.df, Summenhfk. = cumsum(Stiftlänge.df$rel.Häufigkeit), Dichte = Stiftlänge.df$rel.Häufigkeit/Stiftlänge.df$Klassenbreite)
 
 Stiftlänge.df
@@ -611,8 +620,9 @@ Stiftlänge.df
 ```{r}
 barplot(Stiftlänge.df$abs.Häufigkeit, names = Länge_Intervall.vec, main = "Absolute Häufigkeit Stiftlänge", ylab = "abs. Häufigkeit", ylim = c(0,20), xlab = "Stiftlänge in cm", col = "blue")
 ```
-Aufgrund der unglücken Wahl der Maße in cm und der geringen Steuung sowie der folglichen geringen Klassenbreite, wird hier kein Diagramm der Häufigkeitsdichte, sondern ein Diagramm der rel. Häufigkeit erstellt. 
+Aufgrund der unglücken Wahl der Maße in cm und der geringen Steuung sowie der folglichen geringen Klassenbreite, wird hier kein Diagramm der Häufigkeitsdichte, sondern ein Diagramm der rel. Häufigkeit erstellt. \
 ```{r}
+# Das Histogramm wird mittels Barplot und 0 Abstand zwischen den Balken erstellt
 barplot(Stiftlänge.df$rel.Häufigkeit, names = Länge_Intervall.vec, space = 0, col = "blue", ylim = c(0,0.4), xlab = "Stiftlänge in cm", ylab = "rel. Häufigkeit", main = "Relative Häufigkeitsverteilung Stiftlänge")
 ```
 ```{r}
@@ -620,22 +630,21 @@ plot(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.), main = "Summenh
 
 points(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.))
 lines(c(3.3,3.4,3.5,3.6,3.7,3.8), c(0,Stiftlänge.df$Summenhfk.), type = "s", lty = 3)
-abline(0.25, 0, lty = "dashed")
-abline(0.75, 0, lty = "dashed")
-abline(0.5, 0, lty = "dashed", col = "red")
+abline(0.25, 0, lty = "dashed")               # Linie für das untere Quartil
+abline(0.75, 0, lty = "dashed")               # Linie für das obere Quartil
+abline(0.5, 0, lty = "dashed", col = "red")   # Linie für den Median
 ```
 
 ##### **b) Schätze das arithmetische Mittel aus der grafischen Darstellung für die Häufigkeit und den Median aus der grafischen Darstellung für die Summenhäufigkeit.**
 \
+Die Schätzung erfolgte nach derselben Vorgehensweise, wie sie bereits mehrfach in den Übungen zuvor erwähnt worden ist (siehe A-3). Daher wird auf eine ausführliche Beschreibung der Durchführung der Schätzung an dieser Stelle verzichtet. \
 \
 __*Würfel:*__\
 arithmetisches Mittel: 3,5\
 Median: 3
 \
 \
-__*Wartezeit:*__
-\
-\
+__*Wartezeit:*__\
 arithmetisches Mittel: liegt im Intervall [0,3] und beträgt geschätzt 3\
 Median: 2,8
 \
@@ -873,16 +882,20 @@ mean(abs(Verteilungsvergleich.df$Stiftlaenge_cm-mean(Verteilungsvergleich.df$Sti
 ```{r}
 boxplot(Verteilungsvergleich.df$Wuerfel, col = "blue", main = "Würfel", ylab = "Augenzahl")
 ```
+Der Median liegt hier genau beim arithmetischen Mittel von 3. Die Flächen der einzelnen Quartile sind nicht genau gleich aber annähernd gleich groß. Es kann daher auf eine Gleichverteilung geschlossen werden. \
 ```{r}
 boxplot(Verteilungsvergleich.df$Wartezeit_min, col = "blue", ylab = "Wartezeit in min", main = "Wartezeit")
 ```
+Auch abgesehen von dem einen Aureißer (Punkt) sind die Quartile nicht gleich groß (vertikale ausdehnung in diesem Fall). Speziell das erste und das vierte Quartil unterscheiden sich deutlich. Die Messgrößen sind daher nicht gleichverteilt. \
 ```{r}
 boxplot(Verteilungsvergleich.df$Telgesprae_min, main = "Telefongespräch", ylab = "Dauer Telefongespräch", col = "blue")
 ```
+Wird der Aureißer außer acht gelassen, sind die Daten annähernd gleichverteilt, auch wenn speziell das erste Quartil größer ist als die anderen drei.\
 ```{r}
 boxplot(Verteilungsvergleich.df$Stiftlaenge_cm, main = "Stiftlänge", ylab = "Stiftlänge in cm", col = "blue")
 ```
-
+\
+\
 
 ## **B-5)** Lageparameter als Sicherheitskennzahlen. Eine Fluggesellschaft wirbt damit, dass pro 489 Millionen Passagierkilometer lediglich 1 Todesfall zu beklagen war. (Das klingt sehr gut, wenn man nur 800 km fliegen will). Mit dieser Statistik, so die Fluggesellschaft, ist die Reise mit ihr 10-mal sicherer als eine Autofahrt. (m.a.W.: Im Autoverkehr gibt es 10 Tote auf 48 Millionen Passagierkilometer, oder 1 Toten auf 4,8 Mio. Passagierkilometer.) Allerdings fliegt das Flugzeug im Durchschnitt auch 10-mal schneller als ein Auto fährt. Welche Kennzahlen würde eine Pro-Auto-Initiative dieser Werbung entgegenstellen? (Beachte die effektiven Reisezeiten.)
 Wie sich aus der Statistik ableiten lässt, ist laut Fluggesellschaft das Fliegen rund 10 Mal sicherer als eine Autofahrt. Gleichzeitig wird aber auch angegeben, dass ein Flugzeug im Durchschnitt auch 10 Mal so schnell fliegt, als ein Auto fährt. Innerhalb eines gleichen Zeitabschnitts legt ein Flugzeug 48 Mio. Kilometer zurück, ein Auto hingegen nur 4,8 Mio Kilometer. Aus der Angabe geht hervor, dass für beide Strecken jeweils ein Todesopfer zu beklagen ist. Das Sterberisiko ist zwar pro Kilometer Flugstrecke geringer als pro Kilometer Autofahrt, Für eine bestimmte Reisezeit ist das Risiko zu Sterben allerdings gleich groß. Die Pro-Auto-Initiative könnte also angeben, dass pro Reisestunde das Sterberisiko bei einer Autofahrt gleich groß ist wie bei der Reise mit einem Flugzeug. 
@@ -915,6 +928,7 @@ Bei dieser Untersuchtung kommt wieder das Simpson Paradoxon zum Einsatz. Betrach
 \
 **Verteilung der Unternehmen nach den Branchen**
 ```{r}
+# Einlesen der Daten aus einer .csv Datei
 Unternehmensumsätze.df <- read.csv("Unternehmensumsaetze.csv", sep = ";", dec = ",", header = TRUE)
 ```
 \
@@ -950,6 +964,7 @@ summary(Unternehmensumsätze.df$Umsatz)
 ```{r}
 hist(Unternehmensumsätze.df$Umsatz, c(0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500), col = "blue", main = "Histogramm der Unternehmensumsätze", xlab = "Umsatz in Mrd. $", ylab = "Anzahl der Unternehmen", ylim = c(0,40))
 ```
+Das Histogramm macht deutlich, dass die Meisten Unternehmen einen Umsatz zwischen 80 und 150 Mrd. US-Dollar haben. Es gibt aber auch ein paar Unternehmne, die wesentlich mehr Unternehmensumsatz von bis zu knapp 500 Mrd. US-Dollar generieren können. 
 \
 \
 **Aufteilung nach Unternehmensgewinnen**
@@ -1015,7 +1030,7 @@ Den größten Ausreißer, also das Unternehmen, das den größten Gewinn je Mita
 \
 **Lorenzkurve angewandt auf die Merkmale "Umsätze" und "Mitarbeiter"**
 ```{r}
-"ineq" %in% installed.packages()
+#"ineq" %in% installed.packages()
 #install.packages("ineq")
 library(ineq)
 

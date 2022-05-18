@@ -2,31 +2,39 @@
 title: "Statistik und Qualität - Ausarbeitung der zweiten Übung"
 author: "Stefan Dünser"
 output:
-  word_document: default
   html_document:
     df_print: paged
   pdf_document: default
+  word_document: default
 ---
 #### 1) Simuliere die Folge von 100 Münzwürfen mit dem Computer. Wir gehen dabei von einer „fairen“ Münze aus, d.h. von einer Münze, die nach einem Wurf zu je 50 % „Kopf“ oder „Zahl“ zeigt. Erzeuge dazu ein Feld (einen Vektor) mit 100 Komponenten, in den mit je 50 % Wahrscheinlichkeit „0“ („Kopf“) oder „1“ („Zahl“) eingetragen werden. Betrachte die entstehenden Muster. Wie oft treten 3 oder mehrere gleiche Ergebnisse in Serie auf? Wie (statistisch) bedeutsam sind diese Häufungen von Ereignissen?
 ```{r}
 N <- 100
+# Mit floor wird die Zufallszahl auf die nächste kleinere Ganzzahl abgerundet.
+# runif erzeugt N gleichverteilte Zufallszahlen
 Muenzwurf.vec <- floor(runif(N) * 2)
 Muenzwurf.vec
 # Speichern des zufälligen Ausgangsvektors für die Feststellung der Nuller-Serien
 Muenzwurf0.vec <- Muenzwurf.vec
 ```
 ```{r}
+# Definition einer Variable für die Seriengröße. Dies ermöglicht eine Veränderung an dieser Stelle, ohne jeden Wert einzeln anpassen zu müssen.
 n <- 12
 ```
 
 Im folgenden wird angenommen, dass eine Serie aus maximal `r n` Elementen bestehen kann. 
 ```{r}
+# ablegen der Zufallszahlen in einer Tabelle
 Serie.df <- data.frame(Seriengröße = c(1:n), Anzahl_Zahl = rep(0,n), Anzahl_Kopf = rep(0,n))
+# Bestimmung der Anzahl 1er - also Zahl - der N Münzwürfe
 N1 <- sum(Muenzwurf.vec)
+# Shiften des Vektors Muenzwurf1.vec, da alle alleinstehenden 1er gezählt worden sind. Es verbleiben noch 2er und längere Gruppen 1er.
 Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
+# Die Summe an einzelnen 1ern in der Folge wird gezählt
 N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
 Serie.df$Anzahl_Zahl[1] <- N1-N2
 
+# In der Schleife werden alle 1er Folgen mit 2 oder mehr aufeinanderfolgenden 1er gezählt. Die Zählung funktioniert nach demselben Prinzip über Shifting und Zählen wie bereits bei den alleinstehenden 1ern.
 i <- 2
 while (i <= n) {
   Muenzwurf.vec <- Muenzwurf1.vec
@@ -40,8 +48,10 @@ while (i <= n) {
 Serie.df
 ```
 ```{r}
+# Es werden alle Nuller auf 1 gesetzt und alle 1er auf Null
 Muenzwurf.vec <- (Muenzwurf0.vec == 0) * 1
 
+# Die Zählung der Nullen im Vektor erfolgt auf dieselbe Weise wie die oben bereits beschriebene Variante der Zählung der 1er in der Zufallszahlenfolge.
 N1 <- sum(Muenzwurf.vec)
 Muenzwurf1.vec <- Muenzwurf.vec * c(0,Muenzwurf.vec[-length(Muenzwurf.vec)])
 N2 <- sum(Muenzwurf1.vec + c(Muenzwurf1.vec[-1],0) > 0)
@@ -66,6 +76,7 @@ Kopf <- 0
 SerieGroesserGleich3_1 <- 0
 SerieGroesserGleich3_0 <- 0
 
+# Zählschleife zur Ermittlung der Anzahl an Kopf (0) und Zahl (1) Serien mit mehr oder gleich 3 gleichen aufeinanderfolgenend Münzwürfen
 while (i <= n) {
   Zahl <- Serie.df$Anzahl_Zahl[i]
   Kopf <- Serie.df$Anzahl_Kopf[i]
@@ -76,6 +87,7 @@ while (i <= n) {
 SerieGroesserGleich3_1
 SerieGroesserGleich3_0
 
+# Summe der Folge mit mehr oder gleich 3 gleichen Münzwürfen hintereinander
 SerieGroesserGleich3 <- SerieGroesserGleich3_0 + SerieGroesserGleich3_1
 SerieGroesserGleich3
 
@@ -93,6 +105,7 @@ Die Wahrscheinlichkeit, dass beim Münzwurf mit einer fairen Münze dasselbe Erg
 X.vec <- 1:100
 Wuerfeln.vec <- floor(runif(length(X.vec),1,7))
 Wuerfeln.vec
+# Alle 6er werden auf 1 gesetzt, die restlichen Zahlen werden 0 gesetzt
 Wuerfelwahrscheinlichkeit.vec <- (Wuerfeln.vec == 6) * 1
 Wuerfelwahrscheinlichkeit.vec
 Wuerfelwahrscheinlichkeit0.vec <- Wuerfelwahrscheinlichkeit.vec
@@ -104,12 +117,15 @@ n <- 5
 Es wird angenommen, dass nicht öfter als `r n` Mal hintereinander die Zahl 6 gewürfelt wird.
 ```{r}
 Wuerfelserie.df <- data.frame(Seriengröße = c(1:n), Anzahl_6 = rep(0,n))
+# Anzahl der gewürfelten 6er
 N1 <- sum(Wuerfelwahrscheinlichkeit.vec)
 Wuerfelwahrscheinlichkeit1.vec <- Wuerfelwahrscheinlichkeit.vec * c(0,Wuerfelwahrscheinlichkeit.vec[-length(Wuerfelwahrscheinlichkeit.vec)])
+# Anzahl der 6er die alleinstehend sind - keine Folge
 N2 <- sum(Wuerfelwahrscheinlichkeit1.vec + c(Wuerfelwahrscheinlichkeit1.vec[-1],0) > 0)
 Wuerfelserie.df$Anzahl_6[1] <- N1-N2
 
 
+# Ermittlung der Anzahl 6er die in einer Folge aus 2 oder mehr Elementen auftreten
 i <- 2
 while (i <= n) {
   Wuerfelwahrscheinlichkeit.vec <- Wuerfelwahrscheinlichkeit1.vec
@@ -122,6 +138,7 @@ while (i <= n) {
 Wuerfelserie.df
 ```
 ```{r}
+# Ermittlung der Anzahl an Folgen, in denen ein 6er 3 oder mehrmal hintereinander auftritt
 Sechserserie <- Wuerfelserie.df$Anzahl_6[3] + Wuerfelserie.df$Anzahl_6[4] + Wuerfelserie.df$Anzahl_6[5]
 Sechserserie
 ```
@@ -129,6 +146,9 @@ Beim zufälligen Würfelversuch mit einem fairen Würfel tritt eine Serie mit 3 
 ```{r}
 plot(X.vec, Wuerfeln.vec, ylim=c(1,6), xlab = "Würfelversuch", ylab = "Würfelergebnis", main = "Ergebnis von 100 Würfelversuchen")
 abline(h=6, col="red")
+```
+```{r}
+barplot(Wuerfelserie.df$Anzahl_6/sum(Wuerfelserie.df$Anzahl_6),names=c(1:5), main = "Häufigkeit an 6er", ylab = "rel. Häufigkeit", xlab = "Größe der 6er Serie", col = "blue", ylim = c(0,1))
 ```
 \
 \
@@ -139,28 +159,35 @@ library("plotrix")
 ```
 ```{r}
 N <- 10
-Sprung <- 100
-MaxN <- 10000
-Pi.vec = rep(0,Sprung)
+Sprung <- 50
+MaxN <- 10050
+Pi.vec = rep(0,((MaxN-N)/Sprung))
 ```
 
 
 ```{r}
-while (N < MaxN) {
-  Pi_Random.vec <- runif(N,-1,1)
-  M.df <- as.vector(data.frame(xValue = sample(Pi_Random.vec, N/2, replace = TRUE), yValue = sample(Pi_Random.vec, N/2, replace = TRUE)))
+while (N <= MaxN) {
+  # Definition von x- und y- Werten an gleichverteilten Zufallszahlen
+  Xrand.vec <- runif(N,-1,1)
+  Yrand.vec <- runif(N,-1,1)
+  # Zufallszahlen in die Ebene bringen
+  M.df <- data.frame(xValue = Xrand.vec, yValue = Yrand.vec)
   
+  # Zählt Punkte im Kreis
   n <- 0
   j <- 1
-  while (j <= N/2) {
+  while (j <= N) {
+    # Überprüfung, ob Punkt sich im Kreis befindet
     D <- sqrt(M.df$xValue[j]^2 + M.df$yValue[j]^2)
     if(D <= 1){
+      # Zählen der Punkte im Kreis
       n <- n + 1
     }
     j <- j + 1
   }
+  #Berechnung der Zahl Pi mit der Monte-Carlo Methode
+  Pi.vec[N/Sprung] <- (n/N) * 4
   N <- N + Sprung
-  Pi.vec[N/Sprung] <- (n/N) * 8
 }
 ```
 
@@ -168,12 +195,14 @@ while (N < MaxN) {
 summary(Pi.vec)
 ```
 ```{r}
+# grafische Darstellung der Zufallszahlenverteilung innerhalb eines Quadrats mit der Seitenlänge 2
 plot(M.df, main = "pi mit Monte Calro Simulation ermitteln", xlim = c(-1,1), ylim = c(-1,1), asp = 1)
 abline(h = 0)
 abline(v = 0)
 draw.circle(0, 0, 1, border = "red", lwd = 3)
 ```
 ```{r}
+# Darstellung, dass der Schätzwert von Pi umso genauer ist, je mehr Zufallszahlen für die Monte-Carlo Methode verwendet werden.
 plot(Pi.vec, ylab = "Schätzwert Zahl Pi", main = "Abhängigkeit vom Pi-Schätzwert von N", xlab = "Stichprobengröße")
 abline(h = 3.14159, col = "red")
 ```
@@ -195,13 +224,14 @@ Nein. Das Risiko, einen Unfall mit Todesfolge in alkoholisiertem Zustand zu veru
 
 **a) Erstelle aus den Angaben eine Kontingenztabelle und vervollständige sie.**\
 ```{r}
-Autounfall.tab <- as.table(rbind(c(100,90,190), c(8910,900,9810), c(9010,990,10000)))
+Autounfall.tab <- as.table(rbind(c(100,8910,9010), c(90,900,990), c(190,9810,10000)))
 dimnames(Autounfall.tab) <- list(Gurt = c("angeschnallt", "nicht angeschnallt", "Gesamt"), Leben = c("gestorben", "überlebt", "Gesamt"))
 Autounfall.tab
 ```
 Während in der oberen Tabelle die absoluten Zahlen der Autounfälle mit der Untersuchung zwischen angeschnallt und nicht angeschnallt sowie überleben und sterben dargestellt sind, kann man der unteren Tabelle die relativen Werte dieser Untersuchung sehen.\
+Die relativen Werte in der unteren Tabelle wurden händisch berechnet. Die Werte stellen die jeweiligen relativen Wahrscheinlichkeiten in % dar.
 ```{r}
-Kontingtab.tab <- as.table(rbind(c(1,0.9,1.9), c(89.1,9,98.1), c(90.1,9.9,100)))
+Kontingtab.tab <- as.table(rbind(c(1.0,89.1,90.1), c(0.9,9.0,9.9), c(1.9,98.1,100.0)))
 dimnames(Kontingtab.tab) <- list(Gurt = c("angeschnallt", "nicht angeschnallt", "Gesamt"), Leben = c("gestorben", "überlebt", "Gesamt"))
 Kontingtab.tab
 ```
@@ -211,7 +241,7 @@ Kontingtab.tab
 ```{r}
 Verunf_Angeg <- 8910+(190-90)
 Verunf_Angeg
-Anteil_Verunf_Angeg <- (Verunf_Angeg/10000)*100
+Anteil_Verunf_Angeg <- (Verunf_Angeg/10000)
 Anteil_Verunf_Angeg
 ```
 `r Anteil_Verunf_Angeg` % der verunfallten Personen waren angegurtet.\
