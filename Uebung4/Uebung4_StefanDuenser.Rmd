@@ -7,5 +7,92 @@ output:
   word_document: default
   pdf_document: default
 ---
+### B-1) Ein Produktionsbetrieb arbeitet mit Maschinen, die einen Verschleißteil T enthalten. Die typischen, für den Teil T beobachteten Lebensdauern waren in 4000 Fällen:
+```{r}
+Verschleissteile.df <- data.frame(KlassenLebensdauer = c("[2750,3250]","]3250,3750]","]3750,4250]","]4250,4750]","]4750,5250]","]5250,5750]","]5750,6250]","]6250,6750]", "]6750,7250]"), Klassenbreite = rep(500.00,9), Klassenmitte = c(3000.00,3500.00,4000.00,4500.00,5000.00,5500.00,6000.00,6500.00,7000.00), Anzahl = c(160,240,400,600,1200,800,320,200,80))
+Verschleissteile.df
+```
+**Schätze die Wahrscheinlichkeiten für die Lebensdauer des Teiles T in den gegebenen Klassenbreiten.**
+Aus der tabellarischen Darstellung geht hervor, dass die meisten Teile in der Mitte der Verteilung zu finden ist (KlasseLebensdauer "]4750,5250]"). Dies deutet darauf hin, dass der Schwerpunkt der Verteilung bei der erwähnten KlassenLebensdauer liegt. Der Schwerpunkt wiederum symbolisiert wiederum das arithmetische Mittel der Vereteilung. Geschätzt liegt das arithmetische Mittel bei rund 5000 h. 
+```{r}
+par(las = 2)
+barplot(Verschleissteile.df$Anzahl, names.arg = Verschleissteile.df$KlassenLebensdauer, ylab = "Anzahl der Teile", main = "Lebensdauer eines Teils", col = "blue")
+```
+Auch anhand der grafischen Darstellung kann der Schwerpunkt und somit das arithmetische Mittel der Verteilung auf ca. 5000 h geschätzt werden.
+\ 
+\
+**Berechne die mittlere Lebensdauer (Erwartungswert) und die Streuung (Standardabweichung) der Lebensdauer (in Stunden). (µ = 4950 Std, s = 867 Std)**
+\
+**Erwartungswert:**\
+```{r}
+Erwartungswert <- sum(Verschleissteile.df$Klassenmitte*(Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)))
+Erwartungswert
+```
+**Standardabweichung:**\
+```{r}
+n.vec <- Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)
+Standardabweichung <- sqrt(sum((Verschleissteile.df$Klassenmitte-Erwartungswert)^2*n.vec))
+Standardabweichung
+```
+**Stelle die Wahrscheinlichkeitsfunktion und die Verteilungsfunktion (Summenhäufigkeit) graphisch dar.**\
+
+```{r}
+SummenHfk.vec <- cumsum(Verschleissteile.df$Anzahl)/sum(Verschleissteile.df$Anzahl)
+Haeufigkeit.vec <- Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)
+Verschleissteile.df <- data.frame(Verschleissteile.df, SummenHfk = SummenHfk.vec, Haeufigkeit = Haeufigkeit.vec)
+Verschleissteile.df
+```
+**Wahrscheinlichkeitsfunktion:**\
+```{r}
+par(las = 2)
+barplot(Verschleissteile.df$Haeufigkeit, names.arg = Verschleissteile.df$KlassenLebensdauer, ylab = "rel. Häufigkeit", main = "Lebensdauer eines Teils", col = "blue", ylim = c(0.00,0.35))
+```
+
+
+**Verteilungsfunktion:**\
+```{r}
+Breaks.vec <- c(3000,3500,4000,4500,5000,5500,6000,6500,7000)
+plot(Breaks.vec, Verschleissteile.df$SummenHfk,type = "l", lty = 1, , main = "Summenhäufigkeit der Verschleißteilelebensdauer", xlab = "Lebensdauer in h", ylab = "relative Häufigkeit")
+points(Breaks.vec, Verschleissteile.df$SummenHfk) # Darstellung der Messpunkte als Punkte
+lines(Breaks.vec, Verschleissteile.df$SummenHfk, type = "s", lty = 3) # Darstellung der Steigungsdreiecke
+abline(0.25, 0, lty = "dashed") # unteres Quartil
+abline(0.5, 0, lty = "dashed", col = "red") # Median
+abline(0.75, 0, lty = "dashed") # oberes Quartil
+```
+### B-2) Erzeuge 500 Zufallszahlen, welche die Lebensdauern von 500 Teilen T simulieren (und somit der Verteilung aus Aufgabe B-1 entsprechen).
+```{r}
+Grenzen.vec <- c(0, Verschleissteile.df$SummenHfk)
+Grenzen.vec
+```
+
+```{r}
+Zufallszahlen.fct <- function(AnzahlZufallszahlen){
+  # Mit der Variable "AnzahlZufallszahlen" gibt man der Funktion mit, wie viele Zufallszahlen generiert werden sollen.
+  #Grenzen.vec <- c(0.00,0.04,0.10,0.20,0.35,0.65,0.85,0.93,0.98,1.00)
+  #Klassenmitte.vec <- c(3000,3500,4000,4500,5000,5500,6000,6500,7000)
+  #Break.vec <- c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250)
+  Grenzen.vec <- c(0, Verschleissteile.df$SummenHfk)
+  Klassenmitte.vec <- Verschleissteile.df$Klassenmitte
+  Break.vec <- c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250)
+  Zufallszahlen.vec <- runif(AnzahlZufallszahlen)
+  for(i in 1:AnzahlZufallszahlen){
+    for(j in 1:9){
+      if((Grenzen.vec[j] < Zufallszahlen.vec[i]) & (Zufallszahlen.vec[i] < Grenzen.vec[j+1])){
+        Zufallszahlen.vec[i] <- (Zufallszahlen.vec[i] - Grenzen.vec[j])/(Grenzen.vec[j+1] - Grenzen.vec[j])
+        Zufallszahlen.vec[i] <- Zufallszahlen.vec[i] * 500            #Klassenbreit
+        Zufallszahlen.vec[i] <- Zufallszahlen.vec[i] + Break.vec[j]
+      }
+    }
+  }
+  return(Zufallszahlen.vec)
+}
+
+Zufallszahlen.vec <- Zufallszahlen.fct(500)
+
+hist(Zufallszahlen.vec, breaks = c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250), main = "Verteilung Zufallszahlen Lebensdauer", xlab = "Lebensdauer in h", right = TRUE, ylab = "absolute Häufigkeit", col = "blue", ylim = c(0,150), xlim = c(2000,8000))
+```
+
+
+
 ### B-3) Alle Maschinen aus Aufgabe B-1 sind im Betrieb voll ausgelastet. Sowohl Reparaturen als auch ein Teileersatz bei der Wartung führen zu unerwünschten Betriebsunterbrechungen. Die dabei entstehenden Gesamtkosten Kges bestehen aus den Produktionsausfallkosten, den Reparaturkosten und den Materialkosten. Allerdings sind die Gesamtkosten bei Ausfall des Teiles T höher als bei einem planmäßigen Wechsel im Zuge von Wartungsarbeiten: die Betriebsunterbrechung ist länger, die Reparatur dauert länger und der Schadensfall verursacht weitere Folgekosten.
 
