@@ -2,6 +2,7 @@
 title: "Statistik und Qualität - Ausarbeitung der vierten Übung"
 author: "Stefan Dünser"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
   word_document: default
@@ -9,13 +10,14 @@ output:
 ---
   ### B-1) Ein Produktionsbetrieb arbeitet mit Maschinen, die einen Verschleißteil T enthalten. Die typischen, für den Teil T beobachteten Lebensdauern waren in 4000 Fällen:
 ```{r}
+# Erstellen einer Liste mit den Werten aus der Angabe
 Verschleissteile.df <- data.frame(KlassenLebensdauer = c("[2750,3250]","]3250,3750]","]3750,4250]","]4250,4750]","]4750,5250]","]5250,5750]","]5750,6250]","]6250,6750]", "]6750,7250]"), Klassenbreite = rep(500.00,9), Klassenmitte = c(3000.00,3500.00,4000.00,4500.00,5000.00,5500.00,6000.00,6500.00,7000.00), Anzahl = c(160,240,400,600,1200,800,320,200,80))
   Verschleissteile.df
 ```
 **Schätze die Wahrscheinlichkeiten für die Lebensdauer des Teiles T in den gegebenen Klassenbreiten.**
 Aus der tabellarischen Darstellung geht hervor, dass die meisten Teile in der Mitte der Verteilung zu finden ist (KlasseLebensdauer "]4750,5250]"). Dies deutet darauf hin, dass der Schwerpunkt der Verteilung bei der erwähnten KlassenLebensdauer liegt. Der Schwerpunkt wiederum symbolisiert wiederum das arithmetische Mittel der Vereteilung. Geschätzt liegt das arithmetische Mittel bei rund 5000 h. 
 ```{r}
-par(las = 2)
+par(las = 2)    # Anordnen der Beschriftung der Klassenbreiten (Intervalle) vertikal
 barplot(Verschleissteile.df$Anzahl, names.arg = Verschleissteile.df$KlassenLebensdauer, ylab = "Anzahl der Teile", main = "Lebensdauer eines Teils", col = "blue")
 ```
 Auch anhand der grafischen Darstellung kann der Schwerpunkt und somit das arithmetische Mittel der Verteilung auf ca. 5000 h geschätzt werden.
@@ -36,90 +38,88 @@ Standardabweichung
 ```
 **Stelle die Wahrscheinlichkeitsfunktion und die Verteilungsfunktion (Summenhäufigkeit) graphisch dar.**\
 ```{r}
+# Berechnen der Summenhäufigkeit und der relativen Häufigkeit
 SummenHfk.vec <- cumsum(Verschleissteile.df$Anzahl)/sum(Verschleissteile.df$Anzahl)
 Haeufigkeit.vec <- Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)
+# Ergänzen der Werteliste aus der Angabe um die berechneten Werte
 Verschleissteile.df <- data.frame(Verschleissteile.df, SummenHfk = SummenHfk.vec, Haeufigkeit = Haeufigkeit.vec)
 Verschleissteile.df
 ```
 **Wahrscheinlichkeitsfunktion:**\
 ```{r}
-par(las = 2)
+par(las = 2)    # Anordnen der Beschriftung der Klassenbreiten (Intervalle) vertikal
 barplot(Verschleissteile.df$Haeufigkeit, names.arg = Verschleissteile.df$KlassenLebensdauer, ylab = "rel. Häufigkeit", main = "Lebensdauer eines Teils", col = "blue", ylim = c(0.00,0.35))
 ```
   
-**Verteilungsfunktion:**\
+**Verteilungsfunktion (Summenhäufigkeit):**\
 ```{r}
 Breaks.vec <- c(3000,3500,4000,4500,5000,5500,6000,6500,7000)
 plot(Breaks.vec, Verschleissteile.df$SummenHfk,type = "l", lty = 1, , main = "Summenhäufigkeit der Verschleißteilelebensdauer", xlab = "Lebensdauer in h", ylab = "relative Häufigkeit")
 points(Breaks.vec, Verschleissteile.df$SummenHfk) # Darstellung der Messpunkte als Punkte
 lines(Breaks.vec, Verschleissteile.df$SummenHfk, type = "s", lty = 3) # Darstellung der Steigungsdreiecke
-abline(0.25, 0, lty = "dashed") # unteres Quartil
-abline(0.5, 0, lty = "dashed", col = "red") # Median
-abline(0.75, 0, lty = "dashed") # oberes Quartil
+abline(0.25, 0, lty = "dashed")               # unteres Quartil
+abline(0.5, 0, lty = "dashed", col = "red")   # Median
+abline(0.75, 0, lty = "dashed")               # oberes Quartil
 ```
-
 ### B-2) Erzeuge 500 Zufallszahlen, welche die Lebensdauern von 500 Teilen T simulieren (und somit der Verteilung aus Aufgabe B-1 entsprechen).
 ```{r}
-Grenzen.vec <- c(0, Verschleissteile.df$SummenHfk)
-Grenzen.vec
-```
-  
-```{r}
-Zufallszahlen.fct <- function(AnzahlZufallszahlen){
 # Mit der Variable "AnzahlZufallszahlen" gibt man der Funktion mit, wie viele Zufallszahlen generiert werden sollen.
-  #Grenzen.vec <- c(0.00,0.04,0.10,0.20,0.35,0.65,0.85,0.93,0.98,1.00)
-  #Klassenmitte.vec <- c(3000,3500,4000,4500,5000,5500,6000,6500,7000)
-  #Break.vec <- c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250)
-  Grenzen.vec <- c(0, Verschleissteile.df$SummenHfk)
-  Klassenmitte.vec <- Verschleissteile.df$Klassenmitte
-  Break.vec <- c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250)
-  Zufallszahlen.vec <- runif(AnzahlZufallszahlen)
+Zufallszahlen.fct <- function(AnzahlZufallszahlen){
+  # Da es sich bei der Datenliste um globale Variablen handelt, kann direkt auf diese zugegriffen werden, ohne die Werte händisch in einen neuen Vektor zu schreiben.
+  Grenzen.vec <- c(0, Verschleissteile.df$SummenHfk)    # Summenhfk soll bei 0 starten
+  Klassenmitte.vec <- Verschleissteile.df$Klassenmitte  # Aus der Tabelle (Angaben) Verschleißteile
+  Klassenbreite <- Verschleissteile.df[1,2]     # Aus der Tabelle (Angaben) Verschleißteile
+  Break.vec <- c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250) # Alle vokommenden Intervallsgrenzen
+  # Erzeugung gleichverteilter Zufallszahlen und anpassen auf die Anfangsverteilung
+  Zufallszahlen.vec <- runif(AnzahlZufallszahlen) 
   for(i in 1:AnzahlZufallszahlen){
     for(j in 1:9){
       if((Grenzen.vec[j] < Zufallszahlen.vec[i]) & (Zufallszahlen.vec[i] < Grenzen.vec[j+1])){
         Zufallszahlen.vec[i] <- (Zufallszahlen.vec[i] - Grenzen.vec[j])/(Grenzen.vec[j+1] - Grenzen.vec[j])
-        Zufallszahlen.vec[i] <- Zufallszahlen.vec[i] * 500            #Klassenbreit
+        Zufallszahlen.vec[i] <- Zufallszahlen.vec[i] * Klassenbreite    
         Zufallszahlen.vec[i] <- Zufallszahlen.vec[i] + Break.vec[j]
       }
     }
   }
   return(Zufallszahlen.vec)
 }
-  
+
+# Erzeuge 500 Zufallszahlen
 Zufallszahlen.vec <- Zufallszahlen.fct(500)
   
+# Darstellen der erzeugten Zufallszahlen zur Kontrolle, ob die Form der Verteilung in etwa mit der Ausgangsverteilung der "Lebensdauer der Teile" korreliert
 hist(Zufallszahlen.vec, breaks = c(2750,3250,3750,4250,4750,5250,5750,6250,6750,7250), main = "Verteilung Zufallszahlen Lebensdauer", xlab = "Lebensdauer in h", right = TRUE, ylab = "absolute Häufigkeit", col = "blue", ylim = c(0,150), xlim = c(2000,8000))
 ```
 ### B-3) Alle Maschinen aus Aufgabe B-1 sind im Betrieb voll ausgelastet. Sowohl Reparaturen als auch ein Teileersatz bei der Wartung führen zu unerwünschten Betriebsunterbrechungen. Die dabei entstehenden Gesamtkosten Kges bestehen aus den Produktionsausfallkosten, den Reparaturkosten und den Materialkosten. Allerdings sind die Gesamtkosten bei Ausfall des Teiles T höher als bei einem planmäßigen Wechsel im Zuge von Wartungsarbeiten: die Betriebsunterbrechung ist länger, die Reparatur dauert länger und der Schadensfall verursacht weitere Folgekosten.
 ```{r}
+# Auflisten der Kosten aus den Angaben
 Gesamtkosten.df <- data.frame(Kostenart = c("Betriebsunterbrechnung", "Reparatur", "Material", "Folgeschäden", "Gesamtkosten"), ErsatzNachAusfall = c(15600,1000,800,1200,18600), KostenBeiWartung = c(5200,400,800,0,6400))
 Gesamtkosten.df
 ```
-  
 ```{r}
 Ausfallskosten.fct <- function(SimZeit, Tau){
-  Ausfallskosten <- 18600
-  Wartungskosten <- 6400
-  # Laufindex für die Iteration durch die Zeitschleife
-  i <- 1 
-  SimPunkt <- 0
-  AnzahlReparaturAusfall <- 0
-  AnzahlReparaturWartung <- 0
-      
-    while(SimPunkt < (SimZeit*1000)){
-      Zufallszahl <- Zufallszahlen.fct(1)   # Generiere genau 1 Zufallszahl
-      if(Zufallszahl > Tau){
-        AnzahlReparaturWartung <- AnzahlReparaturWartung + 1
-        SimPunkt <- SimPunkt + Tau
-      } else {
-        AnzahlReparaturAusfall <- AnzahlReparaturAusfall + 1
-        SimPunkt <- SimPunkt + Zufallszahl
-      }
-      
-      i <- i + 1
+  Ausfallskosten <- Gesamtkosten.df[5,2]    # Ermittelt aus Tabelle Gesamtkosten über Matrixelementzugriff
+  Wartungskosten <- Gesamtkosten.df[5,3]    # Ermittelt aus Tabelle Gesamtkosten über Matrixelementzugriff
+  i <- 1          # Laufindex für die Iteration durch die Zeitschleife
+  SimPunkt <- 0   # Punkt, an dem die simulation gerade steht
+  AnzahlReparaturAusfall <- 0     # Anzahl der Ausfälle wegen Reparatur
+  AnzahlReparaturWartung <- 0     # Anzahl Ausfälle wegen vorab Instandhaltung
+  
+  # Simulationszeit um den Faktor 1000 erhöhen - entspicht 1000 h  
+  while(SimPunkt < (SimZeit*1000)){
+    Zufallszahl <- Zufallszahlen.fct(1)   # Generiere genau 1 Zufallszahl
+    if(Zufallszahl > Tau){
+      AnzahlReparaturWartung <- AnzahlReparaturWartung + 1
+      SimPunkt <- SimPunkt + Tau
+    } else {
+      AnzahlReparaturAusfall <- AnzahlReparaturAusfall + 1
+      SimPunkt <- SimPunkt + Zufallszahl
     }
-    Kges <- (AnzahlReparaturAusfall * Ausfallskosten) + (AnzahlReparaturWartung * Wartungskosten)
-    return (Kges/SimZeit)
+      
+    i <- i + 1
+  }
+  Kges <- (AnzahlReparaturAusfall * Ausfallskosten) + (AnzahlReparaturWartung * Wartungskosten)           # Berechnen der Gesamtkosten Kges
+  return (Kges/SimZeit)   # Funktion hat Gesamtkosten als Rückgabewert (Entspricht den mittleren Kosten je 1000 Stunden Laufzeit - weil SimZeit mit Faktor 1000 multipliziert wurde)
 }
 ```
 
@@ -128,15 +128,85 @@ Simulationszeit <- 500
 Kosten.vec <- c()
 Tau.vec <- c()
 
+Zeitsprung <- 50    # Schrittweite der Simulationspunkte in h (h Wartungsintervall)
+minH <- 20          # Simulationsbeginn bei 1000 h (20*Zeitsprung)
+maxH <- 200         # Ende Simulation bei 10000 h (200*Zeitsprung)
 
-MatrixVal <- 5
 
-
-for(n in 20:200){
-   Kosten.vec <- c(Kosten.vec, Ausfallskosten.fct(Simulationszeit, n*50))
-  Tau.vec <- c(Tau.vec, n*50)
+for(n in minH:maxH){
+  Kosten.vec <- c(Kosten.vec, Ausfallskosten.fct(Simulationszeit, n*Zeitsprung))  # Vektor Kosten.vec bei jeder Iteration um ein Zufallselement erweitern
+  Tau.vec <- c(Tau.vec, n*Zeitsprung)     # Vektor Tau.vec bei jeder Iteration durch die for-Schleife um n*Zeitsprung Element ergänzen
 }
 
 plot(Tau.vec, Kosten.vec, ylim = c(0,7000), main = "Kosten abhängig von Wartungsintervall", ylab = "Kosten", xlab = "Wartungsintervall in h", col = "blue", type = "o", lty = 1)
+# Markierung des Punktes, nach wie vielen Stunden h die Wartung zu den geringsten Kosten durchgeführt werden kann
+abline(h = min(Kosten.vec), v = Tau.vec[which.min(Kosten.vec)], col = "red")
+
 ```
-  
+In der folgenden Tabelle wird der beste Zeitpunkt für eine Wartung nach h Laufzeit zu den niedrigsten Kosten abgespeicher. Die Tabelle wird mit jeder Iteration der Simulation um die beiden günstigsten Werte ergänzt. 
+```{r}
+XYbesterFall.df <- data.frame(Achsenname = c("Wartungsintervall (x)", "Kosten (y)"), Simulation1 = c((Tau.vec[which.min(Kosten.vec)]), min(Kosten.vec)))
+XYbesterFall.df
+```
+```{r}
+Simulationszeit <- 500
+Kosten.vec <- c()
+Tau.vec <- c()
+
+Zeitsprung <- 50    # Schrittweite der Simulationspunkte in h (h Wartungsintervall)
+minH <- 20          # Simulationsbeginn bei 1000 h (20*Zeitsprung)
+maxH <- 200         # Ende Simulation bei 10000 h (200*Zeitsprung)
+
+
+for(n in minH:maxH){
+  Kosten.vec <- c(Kosten.vec, Ausfallskosten.fct(Simulationszeit, n*Zeitsprung))  # Vektor Kosten.vec bei jeder Iteration um ein Zufallselement erweitern
+  Tau.vec <- c(Tau.vec, n*Zeitsprung)     # Vektor Tau.vec bei jeder Iteration durch die for-Schleife um n*Zeitsprung Element ergänzen
+}
+
+plot(Tau.vec, Kosten.vec, ylim = c(0,7000), main = "Kosten abhängig von Wartungsintervall", ylab = "Kosten", xlab = "Wartungsintervall in h", col = "blue", type = "o", lty = 1)
+# Markierung des Punktes, nach wie vielen Stunden h die Wartung zu den geringsten Kosten durchgeführt werden kann
+abline(h = min(Kosten.vec), v = Tau.vec[which.min(Kosten.vec)], col = "red")
+```
+```{r}
+XYbesterFall.df <- data.frame(XYbesterFall.df, Simulation2 = c((Tau.vec[which.min(Kosten.vec)]), min(Kosten.vec)))
+XYbesterFall.df
+```
+
+```{r}
+Simulationszeit <- 500
+Kosten.vec <- c()
+Tau.vec <- c()
+
+Zeitsprung <- 50    # Schrittweite der Simulationspunkte in h (h Wartungsintervall)
+minH <- 20          # Simulationsbeginn bei 1000 h (20*Zeitsprung)
+maxH <- 200         # Ende Simulation bei 10000 h (200*Zeitsprung)
+
+
+for(n in minH:maxH){
+  Kosten.vec <- c(Kosten.vec, Ausfallskosten.fct(Simulationszeit, n*Zeitsprung))  # Vektor Kosten.vec bei jeder Iteration um ein Zufallselement erweitern
+  Tau.vec <- c(Tau.vec, n*Zeitsprung)     # Vektor Tau.vec bei jeder Iteration durch die for-Schleife um n*Zeitsprung Element ergänzen
+}
+
+plot(Tau.vec, Kosten.vec, ylim = c(0,7000), main = "Kosten abhängig von Wartungsintervall", ylab = "Kosten", xlab = "Wartungsintervall in h", col = "blue", type = "o", lty = 1)
+# Markierung des Punktes, nach wie vielen Stunden h die Wartung zu den geringsten Kosten durchgeführt werden kann
+abline(h = min(Kosten.vec), v = Tau.vec[which.min(Kosten.vec)], col = "red")
+```
+```{r}
+XYbesterFall.df <- data.frame(XYbesterFall.df, Simulation3 = c((Tau.vec[which.min(Kosten.vec)]), min(Kosten.vec)))
+XYbesterFall.df
+```
+Bei dreimaliger Simulation zeigt sich, dass durch die verwendeten Zufallszahlen die Werte für die x-Komponente (Wartungsintervall in h) und die Werte für die y-Komponente (Kosten) einer gewissen Schwankung unterliegen. Über die folgende Mittelwertsfunktion kann der Mittelwert dieser Schwankung ermittelt werden. Auch wenn die Stichprobe aus 3 Elementen sehr gering ist, kann dennoch eine Schwankung festgestellt werden.
+```{r}
+MittelwertKosten <- ((XYbesterFall.df[2,2])+(XYbesterFall.df[2,3])+(XYbesterFall.df[2,4]))/3
+MittelwertKosten
+```
+```{r}
+MittelwertWartung <- ((XYbesterFall.df[1,2])+(XYbesterFall.df[1,3])+(XYbesterFall.df[1,4]))/3
+MittelwertWartung
+```
+Aus den Wert für den Wartungsintervall bei den besten Kosten kann dann berechnet werden, nach wie viel Prozent der mittleren Lebensdauer der optimal Wartungszeitpunkt zu den geringsten Kosten ist.
+```{r}
+BesterZeitpunkt <- MittelwertWartung/Erwartungswert*100
+BesterZeitpunkt
+```
+Der beste Wartungszeitpunkt zu den geringsten Kosten ist somit bei `r BesterZeitpunkt` % der mittleren/erwarteten Lebensdauer.
