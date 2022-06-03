@@ -8,40 +8,44 @@
     pdf_document: default
   ---
   ### B-1) Ein Produktionsbetrieb arbeitet mit Maschinen, die einen Verschleißteil T enthalten. Die typischen, für den Teil T beobachteten Lebensdauern waren in 4000 Fällen:
-  ```{r}
+```{r}
   Verschleissteile.df <- data.frame(KlassenLebensdauer = c("[2750,3250]","]3250,3750]","]3750,4250]","]4250,4750]","]4750,5250]","]5250,5750]","]5750,6250]","]6250,6750]", "]6750,7250]"), Klassenbreite = rep(500.00,9), Klassenmitte = c(3000.00,3500.00,4000.00,4500.00,5000.00,5500.00,6000.00,6500.00,7000.00), Anzahl = c(160,240,400,600,1200,800,320,200,80))
   Verschleissteile.df
-  ```
-  **Schätze die Wahrscheinlichkeiten für die Lebensdauer des Teiles T in den gegebenen Klassenbreiten.**
-  Aus der tabellarischen Darstellung geht hervor, dass die meisten Teile in der Mitte der Verteilung zu finden ist (KlasseLebensdauer "]4750,5250]"). Dies deutet darauf hin, dass der Schwerpunkt der Verteilung bei der erwähnten KlassenLebensdauer liegt. Der Schwerpunkt wiederum symbolisiert wiederum das arithmetische Mittel der Vereteilung. Geschätzt liegt das arithmetische Mittel bei rund 5000 h. 
-  ```{r}
+```
+**Schätze die Wahrscheinlichkeiten für die Lebensdauer des Teiles T in den gegebenen Klassenbreiten.**
+Aus der tabellarischen Darstellung geht hervor, dass die meisten Teile in der Mitte der Verteilung zu finden ist (KlasseLebensdauer "]4750,5250]"). Dies deutet darauf hin, dass der Schwerpunkt der Verteilung bei der erwähnten KlassenLebensdauer liegt. Der Schwerpunkt wiederum symbolisiert wiederum das arithmetische Mittel der Vereteilung. Geschätzt liegt das arithmetische Mittel bei rund 5000 h. 
+```{r}
   par(las = 2)
   barplot(Verschleissteile.df$Anzahl, names.arg = Verschleissteile.df$KlassenLebensdauer, ylab = "Anzahl der Teile", main = "Lebensdauer eines Teils", col = "blue")
-  ```
-  Auch anhand der grafischen Darstellung kann der Schwerpunkt und somit das arithmetische Mittel der Verteilung auf ca. 5000 h geschätzt werden.
-  \ 
-  \
-  **Berechne die mittlere Lebensdauer (Erwartungswert) und die Streuung (Standardabweichung) der Lebensdauer (in Stunden). (µ = 4950 Std, s = 867 Std)**
-  \
-  **Erwartungswert:**\
-  ```{r}
-  Erwartungswert <- sum(Verschleissteile.df$Klassenmitte*(Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)))
+```
+Auch anhand der grafischen Darstellung kann der Schwerpunkt und somit das arithmetische Mittel der Verteilung auf ca. 5000 h geschätzt werden.
+\ 
+\
+**Berechne die mittlere Lebensdauer (Erwartungswert) und die Streuung (Standardabweichung) der Lebensdauer (in Stunden). (µ = 4950 Std, s = 867 Std)**
+\
+**Erwartungswert:**\
+```{r}
+Erwartungswert <- sum(Verschleissteile.df$Klassenmitte*(Verschleissteile.df$Anzahl/sum(Verschleissteile.df$KlassenLebensdauerAnzahl)))
   Erwartungswert
-  ```
+```
+
+```{r}
+  
+```
   **Standardabweichung:**\
-  ```{r}
+```{r}
   n.vec <- Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)
   Standardabweichung <- sqrt(sum((Verschleissteile.df$Klassenmitte-Erwartungswert)^2*n.vec))
   Standardabweichung
-  ```
-  **Stelle die Wahrscheinlichkeitsfunktion und die Verteilungsfunktion (Summenhäufigkeit) graphisch dar.**\
+```
+**Stelle die Wahrscheinlichkeitsfunktion und die Verteilungsfunktion (Summenhäufigkeit) graphisch dar.**\
   
-  ```{r}
+```{r}
   SummenHfk.vec <- cumsum(Verschleissteile.df$Anzahl)/sum(Verschleissteile.df$Anzahl)
   Haeufigkeit.vec <- Verschleissteile.df$Anzahl/sum(Verschleissteile.df$Anzahl)
   Verschleissteile.df <- data.frame(Verschleissteile.df, SummenHfk = SummenHfk.vec, Haeufigkeit = Haeufigkeit.vec)
   Verschleissteile.df
-  ```
+```
   **Wahrscheinlichkeitsfunktion:**\
   ```{r}
   par(las = 2)
